@@ -65,36 +65,43 @@ const createGraduationCondition = async (req, res) => {
 }
 
 const updateGraduationCondition = async (req, res) => {
-  try {
     const findGraduationCondition = await GraduationCondition.findOne({ _id: req.params.id });
-    const findOverview = await Overview.findOne({ id: req.body.overViewReference });
+    const findOverview = await Overview.findOne({ _id: req.body.overViewReference });
     const data = req.body;
+    //console.log(data);
+    //console.log(findOverview);
     if (!findOverview) {
       res.status(403).json({
         code: 403,
         message: 'Invalid overview id provided',
       })
+      return;
     }
     if (findGraduationCondition) {
       if (data) {
-        if (data.id) {
-          res.status(402).json({
-            code: 402,
-            message: 'Unable update id - It a unique key',
-          })
+
+        const temp = await GraduationCondition.updateOne({ $set: lodash.omit(req.body, 'id') });
+        console.log(temp);
+        let result = await GraduationCondition.findOne({ _id: req.params.id });
+        if (result) {
+          res.status(200).json({
+            code: 200,
+            data: lodash.omit(result.toObject()),
+            message: 'OK',
+          });
+        } else {
+          res.status(500).json({
+            code: 500,
+            message: 'Failed to retrieve updated data',
+          });
         }
-        await GraduationCondition.updateOne({ $set: lodash.omit(req.body, 'id') });
-        let result = await GraduationCondition.findOne({ id: data.id });
-        res.status(200).json({
-          code: 200,
-          data: lodash.omit(result.toObject()),
-          message: 'OK',
-        })
+        return;
       } else {
         res.status(401).json({
           code: 401,
           message: 'Missing data',
         })
+        return;
       }
     } else {
       res.status(400).json({
@@ -102,12 +109,7 @@ const updateGraduationCondition = async (req, res) => {
         message: 'Non exist graduation condition'
       })
     }
-  } catch (err) {
-    res.status(500).json({
-      code: 500,
-      message: err,
-    })
-  }
+  
 }
 
 const deleteAllGraduationCondition = async (req, res) => {

@@ -3,10 +3,11 @@ const OutputType = require("../models/outputTypeModel");
 
 const getAllOutputTypes = async (req, res) => {
   try {
-    const findOutputType = await OutputType.find();
+    let findOutputType = await OutputType.find();
+    //console.log(findOutputType);
     res.status(200).json({
       code: 200,
-      data: lodash.omit(findOutputType.toObject()),
+      data: findOutputType,
       message: 'OK',
     })
   } catch (err) {
@@ -43,11 +44,13 @@ const createNewOutputType = async (req, res) => {
         data: lodash.omit(result.toObject()),
         message: 'OK',
       })
+      return;
     } else {
       res.status(400).json({
         code: 400,
         message: 'Existing data',
       })
+      return;
     }
   } catch (err) {
     res.status(500).json({
@@ -71,21 +74,21 @@ const updateOutputType = async (req, res) => {
     })
     return;
   }
+  if (id) {
+    res.status(402).json({
+      code: 402,
+      message: 'Unable update id - It a unique key',
+    })
+    return;
+  }
   if (findOutput) {
-    if (id) {
-      res.status(402).json({
-        code: 402,
-        message: 'Unable update id - It a unique key',
-      })
-    } else {
-      await findOutput.updateOne({ $set: lodash.omit(req.body, 'id') });
-      let data = await OutputType.findOne({id: req.body.id});
-      res.status(200).json({
-        code: 200,
-        data: lodash.omit(data.toObject()),
-        message: 'OK',
-      })
-    }
+    await findOutput.updateOne({ $set: lodash.omit(req.body, 'id') });
+    let data = await OutputType.findOne({_id: req.params.id});
+    res.status(200).json({
+      code: 200,
+      data: lodash.omit(data.toObject()),
+      message: 'OK',
+    })
   } else {
     res.status(400).json({
       code: 400,
@@ -125,17 +128,27 @@ const deleteAllOutputTypes = async (req, res)  => {
 
 const deleteOutputTypesById = async (req, res) => {
   try {
-    const result = OutputType.deleteOne({id: req.body.id});
+    const result = await OutputType.deleteOne({ id: req.body.id });
+    if (!req.body.id) {
+      res.status(401).json({
+        code: 401,
+        message: 'Missing data',
+      });
+      return;
+    }
+    //console.log(result);
     if (result.deletedCount > 0) {
       res.status(200).json({
         code: 200,
         message: 'OK',
       })
+      return;
     } else {
       res.status(400).json({
         code: 400,
         message: 'Non existing Output type',
       })
+      return;
     }
   } catch (err) {
     res.status(500).json({

@@ -19,6 +19,8 @@ const overviewRouter = require("./routes/overviewRoute");
 const enrollRouter = require("./routes/enrollRoute");
 const trainingRegRouter = require("./routes/trainingRegulationRoute");
 const graduationConditionRouter = require("./routes/graduationConditionRoute");
+const outputTypeRouter = require("./routes/outputTypeRoute");
+const referencesDocRouter = require("./routes/referenceDocRouter");
 // End region
 
 
@@ -27,7 +29,9 @@ app.use("/user", userRouter);
 app.use("/overview", overviewRouter);
 app.use("/enroll", enrollRouter);
 app.use("/trainingReg", trainingRegRouter);
-app.use("graduationCondition", graduationConditionRouter);
+app.use("/graduationCondition", graduationConditionRouter);
+app.use("/outputType", outputTypeRouter);
+app.use("/referenceDoc", referencesDocRouter);
 // End region
 
 

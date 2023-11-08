@@ -4,12 +4,12 @@ const outputType = mongoose.Schema({
   id: {
     type: Number,
     require: true,
-    //default: 1,
+    //default: 1, 2, 3, ...
   },
   title: {
     type: String,
     require: true,
-    //default: 'Nhận thức',
+    //default: 'Về Nhận thức', 'Về kỹ năng', 'Về thái độ'.
   }
 })
 

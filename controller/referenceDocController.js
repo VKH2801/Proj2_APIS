@@ -6,7 +6,7 @@ const getAllReferencesDoc = async (req, res) => {
     const findReferences = await ReferenceDoc.find();
     res.status(200).json({
       code: 200,
-      data: lodash.omit(findReferences.toOject()),
+      data: findReferences,
       message: 'OK',
     })
   } catch (err) {
@@ -41,7 +41,7 @@ const createReferencesDoc = async (req, res) => {
       let result = await newRefDoc.save();
       res.status(200).json({
         code: 200,
-        data: lodash.omit(result.toOject()),
+        data: lodash.omit(result.toObject()),
         message: 'OK',
       })
       return;
@@ -72,7 +72,8 @@ const updateReferences = async (req, res) => {
     const findReferences = await ReferenceDoc.findOne({ _id: req.params.id });
     if (findReferences) {
       await findReferences.updateOne({ $set: lodash.omit(req.body, 'id') });
-      const data = await findReferences.findOne({ id: id });
+      const data = await ReferenceDoc.findOne({ _id: req.params.id });
+      //console.log(data);
       res.status(200).json({
         code: 200,
         data: lodash.omit(data.toObject()),
