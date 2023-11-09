@@ -29,7 +29,7 @@ const getOutputTypeById = async (req, res) => {
       });
       return;
     }
-    res.status(200).json({
+    return res.status(200).json({
       code: 200,
       data: findOutputType,
       message: 'OK',
@@ -129,7 +129,7 @@ const updateOutputType = async (req, res) => {
 
 const deleteAllOutputTypes = async (req, res)  => {
   try {
-    const result = OutputType.deleteMany({});
+    const result = await OutputType.deleteMany({});
     if (result.deletedCount > 0) {
       res.status(200).json({
         code: 200,
