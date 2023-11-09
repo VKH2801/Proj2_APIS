@@ -22,6 +22,7 @@ const graduationConditionRouter = require("./routes/graduationConditionRoute");
 const outputStandardRouter = require("./routes/outputStandardRouter");
 const outputTypeRouter = require("./routes/outputTypeRoute");
 const referencesDocRouter = require("./routes/referenceDocRouter");
+const classifyScaleRouter = require("./routes/classifyScaleRoute");
 // End region
 
 
@@ -34,6 +35,7 @@ app.use("/graduationCondition", graduationConditionRouter);
 app.use("/outputStandard", outputStandardRouter);
 app.use("/outputType", outputTypeRouter);
 app.use("/referenceDoc", referencesDocRouter);
+app.use("/classifyScale", classifyScaleRouter);
 // End region
 
 
