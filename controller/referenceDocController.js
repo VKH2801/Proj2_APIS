@@ -17,6 +17,29 @@ const getAllReferencesDoc = async (req, res) => {
   }
 }
 
+const getRefDocById = async (req, res) => {
+  try {
+    let findRefDoc = await ReferenceDoc.findOne({ _id: req.params.id });
+    if (!req.params.id) {
+      res.status(401).json({
+        code: 401,
+        message: 'Missing Id in request parameter',
+      })
+      return;
+    }
+    res.status(200).json({
+      code: 200,
+      data: findRefDoc,
+      message: 'OK',
+    })
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      message: err,
+    });
+  }
+}
+
 const createReferencesDoc = async (req, res) => {
   try {
     let {
@@ -124,7 +147,7 @@ const deleteReferencesById = async (req, res) => {
         message: 'Missing id',
       });
     }
-    const results = await ReferenceDoc.deleteOne({id: id});
+    const results = await ReferenceDoc.deleteOne({ id: id });
     if (results.deletedCount > 0) {
       res.status(200).json({
         code: 200,
@@ -146,6 +169,7 @@ const deleteReferencesById = async (req, res) => {
 
 module.exports = {
   getAllReferencesDoc,
+  getRefDocById,
   createReferencesDoc,
   updateReferences,
   deleteAllReferences,

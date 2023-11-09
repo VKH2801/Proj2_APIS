@@ -17,6 +17,29 @@ const getAllEnroll = async (req, res) => {
   }
 }
 
+const getEnrollById = async (req, res) => {
+  try {
+    let data = await Enroll.findOne({ _id: req.params.id });
+    if (!req.params.id) {
+      res.status(401).json({
+        code: 401,
+        message: 'Missing id request parameter',
+      })
+    }
+    res.status(200).json({
+      code: 200,
+      data: data,
+      message: 'OK',
+    })
+    return;
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      message: err,
+    })
+  }
+}
+
 const createNewEnroll = async (req, res) => {
   try {
     let { id, title } = req.body;
@@ -153,4 +176,4 @@ const deleteEnrollById = async (req, res) => {
   }
 }
 
-module.exports = { getAllEnroll, createNewEnroll, updateEnroll, deleteAllEnroll, deleteEnrollById }
+module.exports = { getAllEnroll, getEnrollById, createNewEnroll, updateEnroll, deleteAllEnroll, deleteEnrollById }

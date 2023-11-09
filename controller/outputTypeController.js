@@ -19,6 +19,29 @@ const getAllOutputTypes = async (req, res) => {
  
 }
 
+const getOutputTypeById = async (req, res) => {
+  try {
+    let findOutputType = await OutputType.findOne({_id: req.params.id});
+    if (!req.params.id) {
+      res.status(401).json({
+        code: 401,
+        message: 'Missing data in request parameters',
+      });
+      return;
+    }
+    res.status(200).json({
+      code: 200,
+      data: findOutputType,
+      message: 'OK',
+    })
+  } catch (err) {
+    res.status(500).json({
+      code: 500,
+      message: err,
+    });
+  }
+}
+
 const createNewOutputType = async (req, res) => {
   try {
     const findOutputType = await OutputType.findOne({id: req.body.id});
@@ -160,6 +183,7 @@ const deleteOutputTypesById = async (req, res) => {
 
 module.exports = {
   getAllOutputTypes,
+  getOutputTypeById,
   createNewOutputType,
   updateOutputType,
   deleteAllOutputTypes,

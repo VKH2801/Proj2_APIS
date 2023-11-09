@@ -18,12 +18,34 @@ const getAllOverview = async (req, res) => {
         );
     }
 };
+const getOverviewById = async (req, res) => {
+    try {
+        let data = await Overview.findOne({ _id: req.params.id });
+        if (!req.params.id) {
+            res.status(401).json({
+                code: 401,
+                message: 'Missing data in request parameter',
+            })
+            return;
+        }
+        res.status(200).json({
+            code: 200,
+            data: data,
+            message: 'OK'
+        })
+    } catch (err) {
+        res.status(500).json({
+            code: 500,
+            message: err,
+        })
+    }
+}
 
 const createOverview = async (req, res) => {
     try {
         let { eduName, eduId, eduType, applicableSubjects, goalsTraining, goalsAfterTraining, perspectivesTraining, formOfTraining, degreeTraining, majorTraining } = req.body;
         let findOverviewId = await Overview.findOne({ eduId: eduId })
-        let fintOverviewName = await Overview.findOne({eduName: eduName})
+        let fintOverviewName = await Overview.findOne({ eduName: eduName })
 
         if (findOverviewId) {
             res.status(401).json(
@@ -35,7 +57,7 @@ const createOverview = async (req, res) => {
             return;
         }
         if (fintOverviewName) {
-            res.status(402).json (
+            res.status(402).json(
                 {
                     code: 402,
                     message: 'Existing name Overview',
@@ -73,7 +95,7 @@ const createOverview = async (req, res) => {
             });
             return;
         }
-       
+
     }
     catch (err) {
         res.status(500).json(
@@ -142,7 +164,7 @@ const deleteAllOverview = async (req, res) => {
 
 const deleteByIdOverview = async (req, res) => {
     try {
-        let overview = await Overview.deleteOne({eduId: req.body.eduId})
+        let overview = await Overview.deleteOne({ eduId: req.body.eduId })
         console.log(overview);
         if (overview.deletedCount > 0) {
             res.status(200).json({
@@ -163,4 +185,4 @@ const deleteByIdOverview = async (req, res) => {
     }
 }
 
-module.exports = { getAllOverview, createOverview, updateOverview, deleteAllOverview, deleteByIdOverview };
+module.exports = { getAllOverview, getOverviewById, createOverview, updateOverview, deleteAllOverview, deleteByIdOverview };
