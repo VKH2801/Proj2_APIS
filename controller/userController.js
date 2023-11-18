@@ -61,7 +61,7 @@ const register = async (req, res) => {
         let findUser = await User.findOne({ email: email });
 
         if (findUser) {
-            res.status(420).json({
+            return res.status(420).json({
                 code: 420,
                 message: "Existing Email",
             });
@@ -99,6 +99,12 @@ const register = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
+        if (!req.body) {
+            return res.status(400).json({
+                code: 400,
+                message: 'Missing data in body',
+            })
+        }
         let findUser = await User.findOne({ _id: req.params.id });
         console.log(findUser);
         if (findUser) {
@@ -112,7 +118,7 @@ const updateUser = async (req, res) => {
         } else {
             res.status(420).json({
                 code: 420,
-                message: "Non existent email address"
+                message: "Non existent id"
             });
         }
     } catch (error) {

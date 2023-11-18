@@ -12,6 +12,7 @@ const trainingRegulation = new mongoose.Schema({
     required: true,
     //default: 'Chương trình đào tạo cử nhân chính quy ngành Kỹ thuật Phần mềm được thực hiện theo quy chế, quy định đào tạo hiện hành của Trường Đại học Công nghệ Thông tin.',
   }
-})
+
+}, { timestamps: true })
 
 module.exports = mongoose.model('TrainingRegulation', trainingRegulation);

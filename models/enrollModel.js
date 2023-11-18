@@ -11,6 +11,6 @@ const enrollSchema = new mongoose.Schema({
     require: true,
     //default: 'Đối tượng tuyển sinh được tuyển theo đề án tuyển sinh hằng năm của Trường Đại học Công nghệ thông tin - ĐHQG TpHCM',
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model("Enroll", enrollSchema);

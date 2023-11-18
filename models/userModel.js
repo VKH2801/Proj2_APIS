@@ -16,8 +16,8 @@ const userSchema = new mongoose.Schema(
             default: 'user',
         },
         gender: {
-            type: Boolean,
-            default: true,
+            type: String,
+            //default: 'male' | 'female',
         },
         lastName: {
             type: String,

@@ -18,6 +18,6 @@ const graduationConditions = mongoose.Schema({
     //default: '7480103',
     // This field is the id of overview model to reference
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('GraduationCondition', graduationConditions);

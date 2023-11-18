@@ -11,6 +11,6 @@ const outputType = mongoose.Schema({
     require: true,
     //default: 'Về Nhận thức', 'Về kỹ năng', 'Về thái độ'.
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model("OutputType", outputType);

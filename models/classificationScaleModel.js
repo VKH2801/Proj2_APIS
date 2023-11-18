@@ -27,6 +27,6 @@ const classificationScale = mongoose.Schema({
     required: true,
     //default: '654b72698ba535dccbb0f7be'
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('ClassificationScale', classificationScale);

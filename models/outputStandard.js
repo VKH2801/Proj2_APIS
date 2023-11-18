@@ -17,6 +17,6 @@ const outputStandard = mongoose.Schema({
     require: true,
     //default: 654b6d66a5a010e43ca8c974
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('OutputStandard', outputStandard);

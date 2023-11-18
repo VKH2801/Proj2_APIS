@@ -16,6 +16,6 @@ const referenceSchema = mongoose.Schema({
     require: true,
     //default: false
   }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('ReferenceDocument', referenceSchema)
