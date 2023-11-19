@@ -7,7 +7,7 @@ router.post("/register", userController.register);
 router.put("/:id", userController.updateUser);
 router.get("/", userController.getUser);
 router.get("/:id", userController.getUserDetail);
-router.delete("/", userController.deleteUserWith);
-router.delete("/:id", userController.deleteUserById);
+router.delete("/deleteBy", userController.deleteUserWith);
+router.delete("/delete/:id", userController.deleteUserById);
 
 module.exports = router;

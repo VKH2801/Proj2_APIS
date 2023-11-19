@@ -15,7 +15,19 @@ const referenceSchema = mongoose.Schema({
     type: Boolean,
     require: true,
     //default: false
-  }
+  },
+  idUserLatestEdit: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  listIdUserEdited: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 }, { timestamps: true })
 
 module.exports = mongoose.model('ReferenceDocument', referenceSchema)

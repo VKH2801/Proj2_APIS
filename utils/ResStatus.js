@@ -6,6 +6,7 @@ const CodeRes = {
   CodeUnableUpdateId: 402,
   CodeNonExistData: 403,
   CodeEmptyCollection: 404,
+  CodeUserInvalid: 405,
   CodeCatchErorr: 500,
 }
 const MessageRes = {
@@ -15,6 +16,7 @@ const MessageRes = {
   status402: 'Unable update id - It a unique key',
   status403: 'Non existent data',
   status404: 'Empty collection',
+  status405: 'Invalid User',
 }
 
 module.exports = {CodeRes, MessageRes}

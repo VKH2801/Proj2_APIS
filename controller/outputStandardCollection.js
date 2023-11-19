@@ -14,7 +14,7 @@ const getAllOutputStandard = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 };
@@ -36,7 +36,7 @@ const getOutputStandardById = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -84,7 +84,7 @@ const createOutputStandard = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -117,7 +117,7 @@ const updateOutputStandard = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -139,7 +139,7 @@ const deleteAllOutputStandard = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -167,7 +167,7 @@ const deleteById = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }

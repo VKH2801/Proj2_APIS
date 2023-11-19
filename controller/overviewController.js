@@ -1,6 +1,6 @@
 const lodash = require("lodash");
 const Overview = require('../models/overviewModel');
-
+const STATUS = require('../utils/ResStatus');
 const getAllOverview = async (req, res) => {
     try {
         let data = await Overview.find();
@@ -63,7 +63,7 @@ const createOverview = async (req, res) => {
                     message: 'Existing name Overview',
                 }
             )
-
+                return;
         }
         if (!eduName || !eduId || !eduType || !applicableSubjects || !goalsTraining || !goalsAfterTraining || !perspectivesTraining || !formOfTraining || !degreeTraining || !majorTraining) {
             res.status(400).json(
@@ -110,25 +110,31 @@ const createOverview = async (req, res) => {
 
 const updateOverview = async (req, res) => {
     try {
+        if (req.body.id) {
+            return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+                code: STATUS.CodeRes.CodeUnableUpdateId,
+                message: STATUS.MessageRes.status402,
+            })
+        }
         let findOverview = await Overview.findOne({ _id: req.params.id });
         if (findOverview) {
-            if (!req.body.eduId) {
-                await findOverview.updateOne({ $set: lodash.omit(req.body) })
+            if (!req.body) {
+                await findOverview.updateOne({ $set: lodash.omit(req.body, 'eduId') })
                 let data = await Overview.findOne({ _id: req.params.id });
-                res.status(200).json({
+                 return res.status(200).json({
                     code: 200,
                     data: lodash.omit(data.toObject()),
                     message: 'OK',
                 })
             } else {
-                res.status(401).json({
-                    code: 401,
-                    message: 'Invalid param: eduId is unavailable to update',
+                return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
+                    code: STATUS.CodeRes.CodeMissingRequiredData,
+                    message: STATUS.MessageRes.status401,
                 })
             }
 
         } else {
-            res.status(400).json({
+            return res.status(400).json({
                 code: 400,
                 message: 'Overview not found',
             })

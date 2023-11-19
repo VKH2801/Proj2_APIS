@@ -14,7 +14,7 @@ const getAllClassifications = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 
@@ -39,7 +39,7 @@ const getClassifyById = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -91,7 +91,7 @@ const createClassifyScale = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -137,7 +137,7 @@ const updateCls = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -160,7 +160,7 @@ const deleteAll = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 
@@ -189,7 +189,7 @@ const deleteWithId = async (req, res) => {
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }

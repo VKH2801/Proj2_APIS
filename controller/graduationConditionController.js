@@ -13,7 +13,7 @@ const getAllGraduationConditions = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -37,16 +37,16 @@ const getGraduationConditionsById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
 
 const createGraduationCondition = async (req, res) => {
   try {
-    let { id, name, overViewReference } = req.body;
+    let { id, name, idOverView } = req.body;
     const findGraduationCondition = await GraduationCondition.findOne({ id: id });
-    if (!id || !name || !overViewReference) {
+    if (!id || !name || !idOverView) {
       res.status(401).json({
         code: 401,
         message: 'Missing data',
@@ -54,12 +54,12 @@ const createGraduationCondition = async (req, res) => {
       return;
     }
     if (!findGraduationCondition) {
-      let newGraduationCondition = new GraduationCondition({
+      let newGraduationCondition = new GraduationCondition({ 
         id: id,
         name: name,
-        overViewReference: overViewReference,
+        idOverView: idOverView,
       })
-      const findOverviewRef = Overview.findOne({ id: overViewReference });
+      const findOverviewRef = Overview.findOne({ id: idOverView });
       if (findOverviewRef) {
         let result = await newGraduationCondition.save();
         res.status(200).json({
@@ -83,14 +83,14 @@ const createGraduationCondition = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
 
 const updateGraduationCondition = async (req, res) => {
   const findGraduationCondition = await GraduationCondition.findOne({ _id: req.params.id });
-  const findOverview = await Overview.findOne({ _id: req.body.overViewReference });
+  const findOverview = await Overview.findOne({ _id: req.body.idOverView });
   const data = req.body;
   //console.log(data);
   //console.log(findOverview);
@@ -153,7 +153,7 @@ const deleteAllGraduationCondition = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -182,7 +182,7 @@ const deleteGraduationById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }

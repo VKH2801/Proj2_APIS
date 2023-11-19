@@ -7,6 +7,6 @@ router.get('/get/:id', trainingReg.getTrainingById);
 router.post('/new', trainingReg.createNewTrainingReg);
 router.put('/:id', trainingReg.updateTrainingReg);
 router.delete('/deleteAll', trainingReg.deleteAllTrainingReg);
-router.delete('/delete', trainingReg.deleteTrainingRegById);
+router.delete('/delete/:id', trainingReg.deleteTrainingRegById);
 
 module.exports = router;

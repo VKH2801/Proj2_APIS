@@ -14,7 +14,7 @@ const getAllEnroll = async (req, res) => {
   } catch (err) {
     res.status(ResStatus.CodeRes.CodeCatchErorr).json({
       code: ResStatus.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -37,7 +37,7 @@ const getEnrollById = async (req, res) => {
   } catch (err) {
     res.status(ResStatus.CodeRes.CodeCatchErorr).json({
       code: ResStatus.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -79,7 +79,7 @@ const createNewEnroll = async (req, res) => {
   } catch (err) {
     res.status(ResStatus.CodeRes.CodeCatchErorr).json({
       code: ResStatus.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -142,7 +142,7 @@ const deleteAllEnroll = async (req, res) => {
   } catch (err) {
     res.status(ResStatus.CodeRes.CodeCatchErorr).json({
       code: ResStatus.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -173,7 +173,7 @@ const deleteEnrollById = async (req, res) => {
   } catch (err) {
     res.status(ResStatus.CodeRes.CodeCatchErorr).json({
       code: ResStatus.CodeRes.CodeCatchErorr,
-      message: err,
+      message: err.message,
     })
   }
 }

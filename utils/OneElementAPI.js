@@ -11,7 +11,7 @@ export const getAll = async (req, res, schemaType) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
