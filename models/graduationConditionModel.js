@@ -11,7 +11,7 @@ const graduationConditions = mongoose.Schema({
     require: true,
     //default: 'Sinh viên đã tích lũy tối thiểu 130 tín chỉ, đã hoàn thành các môn học bắt buộc của chương trình đào tạo tương ứng với chuyên ngành.'
   },
-  overViewReference: {
+  idOverView: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Overview',
     require: true,

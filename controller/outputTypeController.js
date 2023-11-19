@@ -13,7 +13,7 @@ const getAllOutputTypes = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
  
@@ -37,7 +37,7 @@ const getOutputTypeById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     });
   }
 }
@@ -78,7 +78,7 @@ const createNewOutputType = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -121,7 +121,7 @@ const updateOutputType = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
   
@@ -144,7 +144,7 @@ const deleteAllOutputTypes = async (req, res)  => {
   } catch (err) { 
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -176,7 +176,7 @@ const deleteOutputTypesById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     });
   }
 }

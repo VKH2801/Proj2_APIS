@@ -12,7 +12,7 @@ const getAllReferencesDoc = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -35,7 +35,7 @@ const getRefDocById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     });
   }
 }
@@ -77,7 +77,7 @@ const createReferencesDoc = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 }
@@ -111,7 +111,7 @@ const updateReferences = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 };
@@ -133,7 +133,7 @@ const deleteAllReferences = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     })
   }
 };
@@ -162,7 +162,7 @@ const deleteReferencesById = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: err,
+      message: err.message,
     });
   }
 };
