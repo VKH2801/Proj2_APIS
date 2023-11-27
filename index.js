@@ -23,6 +23,7 @@ const outputStandardRouter = require("./routes/outputStandardRouter");
 const outputTypeRouter = require("./routes/outputTypeRoute");
 const referencesDocRouter = require("./routes/referenceDocRouter");
 const classifyScaleRouter = require("./routes/classifyScaleRoute");
+const generalKnowledgeRouter = require("./routes/generalKnowledgeRoute");
 // End region
 
 
@@ -36,6 +37,7 @@ app.use("/outputStandard", outputStandardRouter);
 app.use("/outputType", outputTypeRouter);
 app.use("/referenceDoc", referencesDocRouter);
 app.use("/classifyScale", classifyScaleRouter);
+app.use("/generalKnowledge", generalKnowledgeRouter);
 // End region
 
 

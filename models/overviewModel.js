@@ -68,7 +68,18 @@ const overviewSchema = new mongoose.Schema(
             require: true,
             //default: 'Kỹ thuật Phần mềm',
         },
-        
+        idUserLatestEdit: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+          },
+          listIdUserEdited: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+          }],
+          createdBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+          },
     },
     { timestamps: true }
 );
