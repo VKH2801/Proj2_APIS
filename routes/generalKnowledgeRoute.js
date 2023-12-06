@@ -7,4 +7,5 @@ router.get('/get/:id', GenKnowledge.getByIdGeneralKnowledge);
 router.post('/new', GenKnowledge.createNewGeneralKnowledge);
 router.put('/:id', GenKnowledge.updateGeneralKnowledge);
 router.delete('/deleteAll', GenKnowledge.deleteAllGeneralKnowledge);
+router.delete('/delete/:id', GenKnowledge.deleteByIdGeneralKnowledge);
 module.exports = router;

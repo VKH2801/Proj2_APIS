@@ -197,10 +197,15 @@ const deleteAllGeneralKnowledge = async (req, res) => {
   }
 }
 
+const deleteByIdGeneralKnowledge = async (req, res) => {
+  
+};
+
 module.exports = {
   getAllGeneralKnowledge,
   getByIdGeneralKnowledge,
   createNewGeneralKnowledge,
   updateGeneralKnowledge,
   deleteAllGeneralKnowledge,
+  deleteByIdGeneralKnowledge,
 };

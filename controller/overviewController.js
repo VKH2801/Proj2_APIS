@@ -43,20 +43,23 @@ const getOverviewById = async (req, res) => {
 const createOverview = async (req, res) => {
   try {
     let {
-      eduName,
-      eduId,
-      eduType,
+      name,
+      type,
+      method,
+      degree,
+      major,
+      availableYear,
+      credits,
+      duration,
+      goals,
+      prospectAfterGraduation,
       applicableSubjects,
       goalsTraining,
       goalsAfterTraining,
       perspectivesTraining,
-      formOfTraining,
-      degreeTraining,
-      majorTraining,
       createdBy,
     } = req.body;
-    let findOverviewId = await Overview.findOne({ eduId: eduId });
-    let fintOverviewName = await Overview.findOne({ eduName: eduName });
+    let fintOverviewName = await Overview.findOne({ name: name });
     if (!createdBy) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
@@ -70,13 +73,6 @@ const createOverview = async (req, res) => {
         message: STATUS.MessageRes.status405 + "for creation",
       });
     }
-    if (findOverviewId) {
-      res.status(401).json({
-        code: 401,
-        message: "Existing id Overview",
-      });
-      return;
-    }
     if (fintOverviewName) {
       res.status(402).json({
         code: 402,
@@ -85,16 +81,14 @@ const createOverview = async (req, res) => {
       return;
     }
     if (
-      !eduName ||
-      !eduId ||
-      !eduType ||
-      !applicableSubjects ||
-      !goalsTraining ||
-      !goalsAfterTraining ||
-      !perspectivesTraining ||
-      !formOfTraining ||
-      !degreeTraining ||
-      !majorTraining
+      !name ||
+      !type ||
+      !method ||
+      !degree ||
+      !major ||
+      !availableYear ||
+      !credits ||
+      !duration
     ) {
       res.status(400).json({
         code: 400,
@@ -103,16 +97,20 @@ const createOverview = async (req, res) => {
       return;
     } else {
       let newOverview = new Overview({
-        eduName: eduName,
-        eduId: eduId,
-        eduType: eduType,
+        name: name,
+        type: type,
+        method: method,
+        degree: degree,
+        major: major,
+        availableYear: availableYear,
+        credits: credits,
+        duration: duration,
+        goals: goals,
+        prospectAfterGraduation: prospectAfterGraduation,
         applicableSubjects: applicableSubjects,
         goalsTraining: goalsTraining,
         goalsAfterTraining: goalsAfterTraining,
         perspectivesTraining: perspectivesTraining,
-        formOfTraining: formOfTraining,
-        degreeTraining: degreeTraining,
-        majorTraining: majorTraining,
         idUserLatestEdit: findUserForCreate._id,
         listIdUserEdited: [findUserForCreate._id],
         createdBy: findUserForCreate._id,
@@ -135,7 +133,14 @@ const createOverview = async (req, res) => {
 
 const updateOverview = async (req, res) => {
   try {
-    const { idUserLatestEdit, createdBy } = req.body;
+    const { idUserLatestEdit } = req.body;
+    let findOverview = await Overview.findOne({ _id: req.params.id });
+    if (!findOverview) {
+      return res.status(400).json({
+        code: 400,
+        message: "Overview not found",
+      });
+    }
     if (!idUserLatestEdit) {
       return res.status(STATUS.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
@@ -151,78 +156,58 @@ const updateOverview = async (req, res) => {
       });
     }
 
-    let findOverview = await Overview.findOne({ _id: req.params.id });
-    const findUserCreated = await User.findOne({
-      _id: req.params.findOverview.createdBy,
-    });
-    if (createdBy !== findOverview.createdBy) {
-      return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
-        code: STATUS.CodeRes.CodeUnableUpdateId,
-        message: "Unable to update createdBy id",
-      });
-    }
+    // const findUserCreated = await User.findOne({
+    //   _id: req.params.findOverview.createdBy,
+    // });
+    const createdBy = findOverview.createdBy;
+    // if (req.body.createdBy !== findOverview.createdBy) {
+    //   return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+    //     code: STATUS.CodeRes.CodeUnableUpdateId,
+    //     message: "Unable to update createdBy id",
+    //   });
+    // }
+    req.body.createdBy = createdBy;
     if (findOverview) {
-      if (!req.body) {
-        req.body.listIdUserEdited = findOverview.listIdUserEdited
+      req.body.listIdUserEdited = findOverview.listIdUserEdited
           ? findOverview.listIdUserEdited
           : [];
-        req.body.createdBy = findOverview.createdBy ? findOverview.createdBy : "";
+        req.body.createdBy = findOverview.createdBy
+          ? findOverview.createdBy
+          : "";
         if (!req.body.listIdUserEdited.includes(idUserLatestEdit)) {
           req.body.listIdUserEdited.push(findUserEdit._id);
         }
         const result = await Overview.findByIdAndUpdate(
           { _id: req.params.id },
-          { $set: lodash.omit(req.body, "eduId") },
+          { $set: lodash.omit(req.body, "_id") },
           { new: true }
         );
-        const responseData = {
-          _id: result._id,
-          eduName: result.eduName,
-          eduId: result.eduId,
-          eduType: result.eduType,
-          applicableSubjects: result.applicableSubjects,
-          formOfTraining: {
-            listForm: result.formOfTraining.listForm
-              ? result.formOfTraining.listForm
-              : "",
-            creditsNumber: result.formOfTraining.creditsNumber
-              ? result.formOfTraining.creditsNumber
-              : 0,
-            time: result.formOfTraining.time ? result.formOfTraining.time : "",
-          },
-          goalsTraining: result.goalsTraining ? result.goalsTraining : "",
-          goalsAfterTraining: result.goalsAfterTraining
-            ? result.goalsAfterTraining.goalsAfterTraining
-            : "",
-          perspectivesTraining: result.perspectivesTraining
-            ? result.perspectivesTraining
-            : "",
-          degreeTraining: result.degreeTraining ? result.degreeTraining : "",
-          majorTraining: result.majorTraining ? result.majorTraining : "",
-          idUserLatestEdit: findUserEdit,
-          listIdUserEdited: result.listIdUserEdited
-            ? result.listIdUserEdited
-            : "",
-          createdBy: findUserCreated ? findUserCreated : result.createdBy,
-          createdAt: result.createdAt,
-          updatedAt: result.updatedAt,
-        };
+        // const responseData = {
+        //   _id: result._id,
+        //   eduName: result.eduName,
+        //   eduType: result.eduType,
+        //   applicableSubjects: result.applicableSubjects,
+        //   goalsTraining: result.goalsTraining ? result.goalsTraining : "",
+        //   goalsAfterTraining: result.goalsAfterTraining
+        //     ? result.goalsAfterTraining.goalsAfterTraining
+        //     : "",
+        //   perspectivesTraining: result.perspectivesTraining
+        //     ? result.perspectivesTraining
+        //     : "",
+
+        //   idUserLatestEdit: findUserEdit,
+        //   listIdUserEdited: result.listIdUserEdited
+        //     ? result.listIdUserEdited
+        //     : "",
+        //   createdBy: findUserCreated ? findUserCreated : result.createdBy,
+        //   createdAt: result.createdAt,
+        //   updatedAt: result.updatedAt,
+        // };
         return res.status(200).json({
           code: 200,
-          data: lodash.omit(responseData.toObject()),
+          data: lodash.omit(result.toObject()),
           message: "OK",
         });
-      } else {
-        return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
-          code: STATUS.CodeRes.CodeMissingRequiredData,
-          message: STATUS.MessageRes.status401,
-        });
-      }
-    } else {
-      return res.status(400).json({
-        code: 400,
-        message: "Overview not found",
-      });
     }
   } catch (err) {
     res.status(500).json({
@@ -255,7 +240,7 @@ const deleteAllOverview = async (req, res) => {
 
 const deleteByIdOverview = async (req, res) => {
   try {
-    let overview = await Overview.deleteOne({ eduId: req.body.eduId });
+    let overview = await Overview.deleteOne({ _id: req.params.id });
     console.log(overview);
     if (overview.deletedCount > 0) {
       res.status(200).json({
