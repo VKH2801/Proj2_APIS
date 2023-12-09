@@ -7,6 +7,6 @@ router.get('/get/:id', enrollController.getEnrollById);
 router.post('/new', enrollController.createNewEnroll);
 router.put('/:id', enrollController.updateEnroll);
 router.delete('deleteAll', enrollController.deleteAllEnroll);
-router.delete('/delete', enrollController.deleteEnrollById)
+router.delete('/delete/:id', enrollController.deleteEnrollById)
 
 module.exports = router;
