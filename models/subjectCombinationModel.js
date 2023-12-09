@@ -5,7 +5,7 @@ const subjectCombinationSchema = new mongoose.Schema({
     type: String,
     required: true,
     //default: Lý luận chính trị và pháp luật
-  }, 
+  },
   totalCredits: {
     type: Number,
     require: true,
@@ -20,7 +20,7 @@ const subjectCombinationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'GeneralKnowledge',
     require: true,
-  }, 
+  },
   idUserLatestEdit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
@@ -35,4 +35,4 @@ const subjectCombinationSchema = new mongoose.Schema({
   },
 }, { timestamps: true })
 
-module.exports = mongoose.exports('SubjectCombination', subjectCombinationSchema);
+module.exports = mongoose.model('SubjectCombination', subjectCombinationSchema);

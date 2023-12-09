@@ -13,7 +13,7 @@ const getAllOverview = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       code: 500,
-      message: error,
+      message: err.message,
     });
   }
 };
@@ -142,7 +142,7 @@ const updateOverview = async (req, res) => {
       });
     }
     if (!idUserLatestEdit) {
-      return res.status(STATUS.CodeMissingRequiredData).json({
+      return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
         message: STATUS.MessageRes.status401 + ": idUserLatestEdit",
       });
@@ -156,17 +156,6 @@ const updateOverview = async (req, res) => {
       });
     }
 
-    // const findUserCreated = await User.findOne({
-    //   _id: req.params.findOverview.createdBy,
-    // });
-    const createdBy = findOverview.createdBy;
-    // if (req.body.createdBy !== findOverview.createdBy) {
-    //   return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
-    //     code: STATUS.CodeRes.CodeUnableUpdateId,
-    //     message: "Unable to update createdBy id",
-    //   });
-    // }
-    req.body.createdBy = createdBy;
     if (findOverview) {
       req.body.listIdUserEdited = findOverview.listIdUserEdited
           ? findOverview.listIdUserEdited
