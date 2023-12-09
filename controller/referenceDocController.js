@@ -51,9 +51,9 @@ const getRefDocById = async (req, res) => {
 
 const createReferencesDoc = async (req, res) => {
   try {
-    let { id, content, isDomesticContent, createdBy } = req.body;
+    let { title, domesticContent, nonDomesticContent, createdBy } = req.body;
 
-    if (!id || !content || !isDomesticContent || !createdBy) {
+    if (!createdBy) {
       res.status(401).json({
         code: 401,
         message: "Missing data",
@@ -61,7 +61,6 @@ const createReferencesDoc = async (req, res) => {
       return;
     }
 
-    const findReferences = await ReferenceDoc.findOne({ id: id });
     const findUserCreated = await User.findOne({ _id: createdBy });
 
     if (!findUserCreated) {
@@ -70,29 +69,21 @@ const createReferencesDoc = async (req, res) => {
         message: "Non existing user for creation",
       });
     }
+    const newRefDoc = new ReferenceDoc({
+      title: title,
+      domesticContent: domesticContent,
+      nonDomesticContent: nonDomesticContent,
+      idUserLatestEdit: findUserCreated,
+      listIdUserEdited: [findUserCreated],
+      createdBy: findUserCreated,
+    });
 
-    if (!findReferences) {
-      const newRefDoc = new ReferenceDoc({
-        id: id,
-        content: content,
-        isDomesticContent: isDomesticContent,
-        idUserLatestEdit: findUserCreated,
-        listIdUserEdited: [findUserCreated._id],
-        createdBy: findUserCreated,
-      });
-
-      const result = await newRefDoc.save();
-      return res.status(200).json({
-        code: 200,
-        data: lodash.omit(result.toObject()),
-        message: "OK",
-      });
-    } else {
-      res.status(400).json({
-        code: 400,
-        message: "Existing references document",
-      });
-    }
+    const result = await newRefDoc.save();
+    return res.status(200).json({
+      code: 200,
+      data: result,
+      message: "OK",
+    });
   } catch (err) {
     res.status(500).json({
       code: 500,
@@ -103,19 +94,14 @@ const createReferencesDoc = async (req, res) => {
 
 const updateReferences = async (req, res) => {
   try {
-    let { id, content, isDomesticContent, idUserLatestEdit } = req.body;
+    let { title, domesticContent, nonDomesticContent, idUserLatestEdit } = req.body;
     if (!idUserLatestEdit) {
       return res.status(401).json({
         code: 401,
         message: "Missing User ID for update references document",
       });
     }
-    if (!content && !isDomesticContent) {
-      return res.status(401).json({
-        code: 401,
-        message: "Missing data",
-      });
-    }
+
 
     const findUserLatestEdit = await User.findOne({ _id: idUserLatestEdit });
     if (!findUserLatestEdit) {
@@ -126,14 +112,6 @@ const updateReferences = async (req, res) => {
     }
 
     const findReferences = await ReferenceDoc.findOne({ _id: req.params.id });
-    const findUserCreated = await User.findOne({ _id: findReferences.createdBy });
-    if (id !== findReferences.id) {
-      res.status(402).json({
-        code: 402,
-        message: "Unable update id - It a unique key",
-      });
-      return;
-    }
 
     if (findReferences) {
       req.body.listIdUserEdited = findReferences.listIdUserEdited
@@ -152,20 +130,9 @@ const updateReferences = async (req, res) => {
         { new: true }
       );
       const data = await ReferenceDoc.findOne({ _id: req.params.id });
-      const result = {
-        _id: data._id,
-        id: data.id,
-        content: data.content,
-        isDomesticContent: data.isDomesticContent,
-        idUserLatestEdit: findUserLatestEdit,
-        listIdUserEdited: data.listIdUserEdited,
-        createdBy: findUserCreated ? findUserCreated : data.createdBy,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt,
-      }
       res.status(200).json({
         code: 200,
-        data: lodash.omit(result.toObject()),
+        data: data,
         message: "OK",
       });
     } else {
@@ -206,14 +173,7 @@ const deleteAllReferences = async (req, res) => {
 
 const deleteReferencesById = async (req, res) => {
   try {
-    const id = req.body.id;
-    if (!id) {
-      res.status(401).json({
-        code: 401,
-        message: "Missing id",
-      });
-    }
-    const results = await ReferenceDoc.deleteOne({ id: id });
+    const results = await ReferenceDoc.deleteOne({ _id: req.params.id });
     if (results.deletedCount > 0) {
       res.status(200).json({
         code: 200,
