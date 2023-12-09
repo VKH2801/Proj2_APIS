@@ -131,7 +131,7 @@ const updateEnroll = async (req, res) => {
     });
   }
 };
-
+//TODO: delete all function not working properly
 const deleteAllEnroll = async (req, res) => {
   try {
     let result = await Enroll.deleteMany({});
