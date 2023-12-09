@@ -7,6 +7,6 @@ router.get('/get/:id', referenceDocController.getRefDocById);
 router.post('/new', referenceDocController.createReferencesDoc);
 router.put('/:id', referenceDocController.updateReferences);
 router.delete('/deleteAll', referenceDocController.deleteAllReferences);
-router.delete('/delete', referenceDocController.deleteReferencesById);
+router.delete('/delete/:id', referenceDocController.deleteReferencesById);
 
 module.exports = router;

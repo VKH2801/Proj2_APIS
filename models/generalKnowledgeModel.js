@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const generalKwonledgeModelSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    required: true,
-    //default: 1
-  },
   title: {
     type: String,
     require: true,
