@@ -181,7 +181,7 @@ const deleteAllGeneralKnowledge = async (req, res) => {
 const deleteByIdGeneralKnowledge = async (req, res) => {
   try {
     const result = await GeneralKnowledge.deleteOne({_id: req.params.id});
-    if (results.deletedCount > 0) {
+    if (result.deletedCount > 0) {
       res.status(200).json({
         code: 200,
         message: "OK",
