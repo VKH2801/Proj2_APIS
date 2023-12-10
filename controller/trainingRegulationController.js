@@ -36,15 +36,15 @@ const getTrainingById = async (req, res) => {
 
 const createNewTrainingReg = async (req, res) => {
   try {
-    let { title, content, createBy } = req.body;
-    if (!title || !content || !createBy) {
+    let { title, content, createdBy } = req.body;
+    if (!createdBy) {
       res.status(401).json({
         code: 401,
         message: "Missing data",
       });
       return;
     }
-    const findUserIdCreate = await UserSchema.findOne({ _id: createBy });
+    const findUserIdCreate = await UserSchema.findOne({ _id: createdBy });
     if (!findUserIdCreate) {
       return res.status(405).json({
         code: 405,
