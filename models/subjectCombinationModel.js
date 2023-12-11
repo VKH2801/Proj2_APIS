@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 
 const subjectCombinationSchema = new mongoose.Schema({
-  name: {
+  content: {
     type: String,
     required: true,
     //default: Lý luận chính trị và pháp luật
+  },
+  title: {
+    type: String,
   },
   totalCredits: {
     type: Number,
@@ -13,7 +16,6 @@ const subjectCombinationSchema = new mongoose.Schema({
   },
   percents: {
     type: Number,
-    required: true,
     //default: 10 - (10%)
   },
   idGeneralKnowledge: {
