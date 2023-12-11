@@ -25,6 +25,7 @@ const referencesDocRouter = require("./routes/referenceDocRouter");
 const classifyScaleRouter = require("./routes/classifyScaleRoute");
 const generalKnowledgeRouter = require("./routes/generalKnowledgeRoute");
 const subjectCombinationRouter = require("./routes/subjectCombinationRoute");
+const subjectDetailsRouter = require("./routes/subjectDetailsRoute");
 // End region
 
 
@@ -41,6 +42,7 @@ app.use("/referenceDoc", referencesDocRouter);
 app.use("/classifyScale", classifyScaleRouter);
 app.use("/generalKnowledge", generalKnowledgeRouter);
 app.use("/subjectCombination", subjectCombinationRouter);
+app.use("/subjectDetails", subjectDetailsRouter);
 // End region
 
 
