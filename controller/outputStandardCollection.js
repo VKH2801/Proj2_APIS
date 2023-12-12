@@ -23,15 +23,24 @@ const getAllOutputStandard = async (req, res) => {
 const getOutputStandardById = async (req, res) => {
   try {
     let findOutputStandard = await OutputStanadard.findOne({ _id: req.params.id });
+    const findOutType = await OutputType.findOne({ _id: findOutputStandard._id});
+    const findUserCreate = await User.findOne({ _id: findOutputStandard.createdBy});
+    const findUserUpdate = await User.findOne({ _id: findOutputStandard.idUserLatestEdit});
     if (!req.params.id) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401,
       })
     }
+    const result = {
+      ...findOutputStandard,
+      idOutputType: findOutType ? findOutType : null,
+      idUserLatestEdit: findUserUpdate ? findUserUpdate : null, 
+      createdBy: findUserCreate ? findUserCreate : null,
+    }
     return res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
-      data: findOutputStandard,
+      data: result,
       message: Res.MessageRes.status200,
     });
   } catch (err) {
@@ -85,7 +94,7 @@ const createOutputStandard = async (req, res) => {
       id: id,
       title: title,
       content: content,
-      idOutputType: idOutputType,
+      idOutputType: findOutputType,
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
@@ -128,7 +137,11 @@ const updateOutputStandard = async (req, res) => {
         data.listIdUserEdited.push(data.idUserLatestEdit);
       }
       await findOutputStandard.updateOne({ $set: lodash.omit(data, 'id') });
-      let result = await OutputStanadard.findOne({ _id: req.params.id });
+      const findOutputType = await OutputType.findOne({ _id:  findOutputStandard.idOutputType});
+      let result = {
+        ...OutputStanadard,
+        idOutputType: findOutputType ? findOutputType : null,
+      }
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
         data: result,
