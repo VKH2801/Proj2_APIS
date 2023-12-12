@@ -46,11 +46,19 @@ const createOutputStandard = async (req, res) => {
   try {
     const findOutputType = await OutputType.findOne({ _id: req.body.idOutputType });
     let {
+      id,
       title,
       content,
       idOutputType,
       createdBy,
     } = req.body;
+    const findValidOutStand = await OutputStanadard.findOne({ id: id});
+    if (findValidOutStand) {
+      return res.status(401).json({
+        code: 401,
+        message: 'id output standard is unique',
+      })
+    }
     if (!findOutputType) {
       return res.status(Res.CodeRes.CodeNonExistData).json({
         code: Res.CodeRes.CodeNonExistData,
@@ -74,6 +82,7 @@ const createOutputStandard = async (req, res) => {
     }
 
     const newOutputStandard = new OutputStanadard({
+      id: id,
       title: title,
       content: content,
       idOutputType: idOutputType,
@@ -118,7 +127,7 @@ const updateOutputStandard = async (req, res) => {
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
         data.listIdUserEdited.push(data.idUserLatestEdit);
       }
-      await findOutputStandard.updateOne({ $set: lodash.omit(data) });
+      await findOutputStandard.updateOne({ $set: lodash.omit(data, 'id') });
       let result = await OutputStanadard.findOne({ _id: req.params.id });
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,

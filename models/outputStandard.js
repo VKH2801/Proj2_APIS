@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const outputStandard = mongoose.Schema(
   {
+    id: {
+      type: String,
+      require: true,
+    },
     title: {
       type: String,
       require: true,
