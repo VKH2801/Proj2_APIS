@@ -146,7 +146,7 @@ const deleteAllOutputTypes = async (req, res) => {
 
 const deleteOutputTypesById = async (req, res) => {
   try {
-    const result = await OutputType.deleteOne({ id: req.body.id });
+    const result = await OutputType.deleteOne({ _id: req.params.id });
     if (!req.body.id) {
       res.status(401).json({
         code: 401,

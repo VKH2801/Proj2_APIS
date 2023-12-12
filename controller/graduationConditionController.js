@@ -30,9 +30,20 @@ const getGraduationConditionsById = async (req, res) => {
       return;
     }
     if (data) {
+      const findUserCreate = await User.findOne({_id: data.createdBy});
+      const findIserUpdate = await User.findOne({_id: data.idUserLatestEdit});
+      const findOverView = await Overview.findOne({_id: data.idOverView});
+      const result = {
+        title: data.title ? data.title : "",
+        content: data.content ? data.content : "",
+        idOverView: findOverView ? findOverView : null,
+        idUserLatestEdit: findIserUpdate ? findIserUpdate : null,
+        listIdUserEdited: data.listIdUserEdited ? data.listIdUserEdited : [],
+        createdBy: findUserCreate ? findUserCreate : null,
+      }
       return res.status(200).json({
         code: 200,
-        data: data,
+        data: result,
         message: "OK",
       });
     } else {
@@ -72,7 +83,7 @@ const createGraduationCondition = async (req, res) => {
     if (findOverviewRef) {
       let newGraduationCondition = new GraduationCondition({
         content: content,
-        idOverView: idOverView,
+        idOverView: findOverviewRef,
         idUserLatestEdit: findUserCreate,
         listIdUserEdited: [findUserCreate._id],
         createdBy: findUserCreate,

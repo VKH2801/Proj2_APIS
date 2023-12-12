@@ -8,6 +8,6 @@ router.get('/get/:id', outputTypeController.getOutputTypeById);
 router.post('/new', outputTypeController.createNewOutputType);
 router.put('/:id', outputTypeController.updateOutputType);
 router.delete('/deleteAll', outputTypeController.deleteAllOutputTypes);
-router.delete('/delete', outputTypeController.deleteOutputTypesById);
+router.delete('/delete/:id', outputTypeController.deleteOutputTypesById);
 
 module.exports = router;
