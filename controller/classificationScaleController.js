@@ -168,13 +168,7 @@ const deleteAll = async (req, res) => {
 
 const deleteWithId = async (req, res) => {
   try {
-    const result = await ClassificationScale.deleteOne({idLevel: req.body.idLevel});
-    if (!req.body.idLevel) {
-      return res.status(Res.CodeRes.CodeMissingRequiredData).json({
-        code: Res.CodeRes.CodeMissingRequiredData,
-        message: Res.MessageRes.status401 + ': id level required',
-      })
-    }
+    const result = await ClassificationScale.deleteOne({_id: req.params.id});
     if (result.deletedCount > 0) {
       res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
