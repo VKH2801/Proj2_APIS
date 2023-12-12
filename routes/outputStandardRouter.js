@@ -7,5 +7,5 @@ router.get('/get/:id', outputStandardController.getOutputStandardById);
 router.post('/new', outputStandardController.createOutputStandard);
 router.put("/:id", outputStandardController.updateOutputStandard);
 router.delete('/deleteAll', outputStandardController.deleteAllOutputStandard);
-router.delete('/delete', outputStandardController.deleteById);
+router.delete('/delete/:id', outputStandardController.deleteById);
 module.exports = router;

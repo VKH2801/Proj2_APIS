@@ -185,7 +185,7 @@ const deleteAllOutputStandard = async (req, res) => {
 
 const deleteById = async (req, res) => {
   try {
-    const result = await OutputStanadard.deleteOne({id: req.body.id});
+    const result = await OutputStanadard.deleteOne({id: req.params.id});
     if (!req.body.id) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
