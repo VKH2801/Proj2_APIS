@@ -52,7 +52,7 @@ const getGraduationConditionsById = async (req, res) => {
 const createGraduationCondition = async (req, res) => {
   try {
     let { content, idOverView, createdBy } = req.body;
-    if (!content || !idOverView || !createdBy) {
+    if (!idOverView || !createdBy) {
       res.status(401).json({
         code: 401,
         message: "Missing data",

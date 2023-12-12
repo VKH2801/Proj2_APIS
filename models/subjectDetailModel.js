@@ -21,9 +21,6 @@ const subjectDetails = new mongoose.Schema({
     required: true,
     //default: 0
   },
-  totalCredits: {
-    type: Number,
-  },
   idSubjectCombination: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 
 const graduationConditions = mongoose.Schema(
   {
+    title: {
+      type: String,
+    },
     content: {
       type: String,
       require: true,
