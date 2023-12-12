@@ -1,16 +1,31 @@
 const mongoose = require("mongoose");
 
-const outputType = mongoose.Schema({
-  id: {
-    type: Number,
-    require: true,
-    //default: 1, 2, 3, ...
+const outputType = mongoose.Schema(
+  {
+    title: {
+      type: String,
+      require: true,
+      //default: 'Về Nhận thức', 'Về kỹ năng', 'Về thái độ'.
+    },
+    content: {
+      type: String,
+    },
+    idUserLatestEdit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    listIdUserEdited: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  title: {
-    type: String,
-    require: true,
-    //default: 'Về Nhận thức', 'Về kỹ năng', 'Về thái độ'.
-  }
-}, { timestamps: true })
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("OutputType", outputType);

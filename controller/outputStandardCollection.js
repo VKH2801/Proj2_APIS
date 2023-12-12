@@ -1,6 +1,7 @@
 const lodash = require("lodash");
 const OutputStanadard = require("../models/outputStandard");
 const OutputType = require("../models/outputTypeModel");
+const User = require("../models/userModel");
 const Res = require("../utils/ResStatus");
 
 const getAllOutputStandard = async (req, res) => {
@@ -43,44 +44,49 @@ const getOutputStandardById = async (req, res) => {
 
 const createOutputStandard = async (req, res) => {
   try {
-    const findOutputStandard = await OutputStanadard.findOne({ id: req.body.id });
-    const findOutputType = await OutputType.findOne({ _id: req.body.outputTypeId });
+    const findOutputType = await OutputType.findOne({ _id: req.body.idOutputType });
     let {
-      id,
       title,
-      outputTypeId
+      content,
+      idOutputType,
+      createdBy,
     } = req.body;
     if (!findOutputType) {
       return res.status(Res.CodeRes.CodeNonExistData).json({
         code: Res.CodeRes.CodeNonExistData,
-        message: Res.MessageRes.status403 + ' in output type: ' + req.body.outputTypeId,
+        message: Res.MessageRes.status403 + ' in output type: ' + req.body.idOutputType,
       })
     }
-    if (!id || !title || !outputTypeId) {
+
+    if (!idOutputType || !createdBy) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401,
       })
     }
-    
-    if (!findOutputStandard) {
-      const newOutputStandard = new OutputStanadard({
-        id: id,
-        title: title,
-        outputTypeId: outputTypeId,
-      });
-      let result = await newOutputStandard.save();
-      return res.status(Res.CodeRes.CodeOk).json({
-        code: Res.CodeRes.CodeOk,
-        data: result,
-        message: Res.MessageRes.status200,
-      })
-    } else {
-      return res.status(Res.CodeRes.CodeExistData).json({
-        code: Res.CodeRes.CodeExistData,
-        message: Res.MessageRes.status400,
+
+    const findUser = await User.findById({_id: createdBy});
+    if (!findUser) {
+      return res.status(401).json({
+        data: 401,
+        message: 'Invalid user',
       })
     }
+
+    const newOutputStandard = new OutputStanadard({
+      title: title,
+      content: content,
+      idOutputType: idOutputType,
+      idUserLatestEdit: findUser,
+      listIdUserEdited: [findUser],
+      createdBy: findUser,
+    });
+    let result = await newOutputStandard.save();
+    return res.status(Res.CodeRes.CodeOk).json({
+      code: Res.CodeRes.CodeOk,
+      data: result,
+      message: Res.MessageRes.status200,
+    })
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
@@ -93,15 +99,26 @@ const updateOutputStandard = async (req, res) => {
   try {
     let findOutputStandard = await OutputStanadard.findOne({ _id: req.params.id });
     let data = req.body;
-    if (!data.title || !data.outputTypeId) {
+    if (!data.idUserLatestEdit) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401
       })
     }
+    const findUser = await User.findOne({ _id: data.idUserLatestEdit});
+    if (!findUser) {
+      return res.status(401).json({
+        code: 401,
+        message: 'Invalid user',
+      })
+    }
     if (findOutputStandard) {
-
-      await findOutputStandard.updateOne({ $set: lodash.omit(data, 'id') });
+      data.listIdUserEdited = findOutputStandard.listIdUserEdited;
+      data.createdBy = findOutputStandard.createdBy;
+      if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
+        data.listIdUserEdited.push(data.idUserLatestEdit);
+      }
+      await findOutputStandard.updateOne({ $set: lodash.omit(data) });
       let result = await OutputStanadard.findOne({ _id: req.params.id });
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,

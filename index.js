@@ -45,7 +45,16 @@ app.use("/subjectCombination", subjectCombinationRouter);
 app.use("/subjectDetails", subjectDetailsRouter);
 // End region
 
+//TODO: idea1 Add new pages ở đó đã có render sẵn thứ tự các elements trong văn bản thành 1 trang html hoàn chỉnh. Ở đó ta sử dụng bài báo này để làm "https://www.telerik.com/blogs/generating-pdf-html-react-example-exporting-data-grids"
 
+//TODO: idea2 sử dụng các thuộc tính thế này https://github.com/tone-row/flowchart-fun
+
+//TODO: idea3 https://reactflow.dev/examples/nodes/custom-node , https://github.com/xyflow/xyflow/discussions/1061 --> recommend
+
+
+// ----------------------------------------------------------------
+
+//TODO: Home page sữ tạo ra danh sách các thứ đã đc tạo ra cũng như update.
 
 app.listen(PORT, () => {
     dbConnect();

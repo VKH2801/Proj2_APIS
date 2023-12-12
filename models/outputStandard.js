@@ -1,22 +1,37 @@
 const mongoose = require("mongoose");
 
-const outputStandard = mongoose.Schema({
-  id: {
-    type: String,
-    require: true,
-    //default: LO1
+const outputStandard = mongoose.Schema(
+  {
+    title: {
+      type: String,
+      require: true,
+      //default: "Nắm vững kiến thức nền tảng về khoa học tự nhiên, khoa học xã hội và hiểu khả năng vận dụng những kiến thức đó vào ngành Kỹ thuật Phần mềm và thực tiễn."
+    },
+    content: {
+      type: String,
+    },
+    idOutputType: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OutputType",
+      require: true,
+      //default: 654b6d66a5a010e43ca8c974
+    },
+    idUserLatestEdit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    listIdUserEdited: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
-  title: {
-    type: String,
-    require: true,
-    //default: "Nắm vững kiến thức nền tảng về khoa học tự nhiên, khoa học xã hội và hiểu khả năng vận dụng những kiến thức đó vào ngành Kỹ thuật Phần mềm và thực tiễn."
-  },
-  outputTypeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'OutputType',
-    require: true,
-    //default: 654b6d66a5a010e43ca8c974
-  }
-}, { timestamps: true })
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('OutputStandard', outputStandard);
+module.exports = mongoose.model("OutputStandard", outputStandard);
