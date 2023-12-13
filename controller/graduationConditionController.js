@@ -62,7 +62,7 @@ const getGraduationConditionsById = async (req, res) => {
 
 const createGraduationCondition = async (req, res) => {
   try {
-    let { content, idOverView, createdBy } = req.body;
+    let { title, content, idOverView, createdBy } = req.body;
     if (!idOverView || !createdBy) {
       res.status(401).json({
         code: 401,
@@ -83,6 +83,7 @@ const createGraduationCondition = async (req, res) => {
     if (findOverviewRef) {
       let newGraduationCondition = new GraduationCondition({
         content: content,
+        title: title,
         idOverView: findOverviewRef,
         idUserLatestEdit: findUserCreate,
         listIdUserEdited: [findUserCreate._id],
