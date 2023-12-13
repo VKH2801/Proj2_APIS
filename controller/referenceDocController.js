@@ -20,7 +20,7 @@ const getAllReferencesDoc = async (req, res) => {
 
 const getRefDocById = async (req, res) => {
   try {
-    let findRefDoc = await ReferenceDoc.findOne({ _id: req.params.id });
+    let findRefDoc = await ReferenceDoc.findById({ _id: req.params.id });
     if (!req.params.id) {
       res.status(401).json({
         code: 401,

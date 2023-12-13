@@ -31,7 +31,7 @@ const getAllSubjectDetials = async (req, res) => {
 
 const getByIdSubjectDetails = async (req, res) => {
   try {
-    const findSubjectInfo = await SubjectDetails.findOne({
+    const findSubjectInfo = await SubjectDetails.findById({
       _id: req.params.id,
     });
     if (findSubjectInfo) {

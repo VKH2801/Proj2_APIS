@@ -1,11 +1,6 @@
 const mongoose = require("mongoose");
 
 const classificationScale = mongoose.Schema({
-  idLevel: {
-    type: String,
-    require: true,
-    //default: 'NT1'
-  },
   level: {
     type: Number,
     require: true,
@@ -26,7 +21,19 @@ const classificationScale = mongoose.Schema({
     ref: 'OutputType',
     required: true,
     //default: '654b72698ba535dccbb0f7be'
-  }
+  },
+  idUserLatestEdit: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  listIdUserEdited: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 }, { timestamps: true })
 
 module.exports = mongoose.model('ClassificationScale', classificationScale);

@@ -19,7 +19,7 @@ const getAllTrainingReg = async (req, res) => {
 
 const getTrainingById = async (req, res) => {
   try {
-    let data = await TrainingRegulation.findOne({ _id: req.params.id });
+    let data = await TrainingRegulation.findById({ _id: req.params.id });
     res.status(200).json({
       code: 200,
       data: lodash.omit(data.toObject()),

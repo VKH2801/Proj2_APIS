@@ -21,7 +21,7 @@ const getAllEnroll = async (req, res) => {
 
 const getEnrollById = async (req, res) => {
   try {
-    let data = await Enroll.findOne({ _id: req.params.id });
+    let data = await Enroll.findById({ _id: req.params.id });
     if (!req.params.id) {
       res.status(ResStatus.CodeRes.CodeMissingRequiredData).json({
         code: ResStatus.CodeRes.CodeMissingRequiredData,

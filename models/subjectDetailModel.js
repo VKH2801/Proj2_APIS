@@ -13,13 +13,14 @@ const subjectDetails = new mongoose.Schema({
   },
   theoryCredits: {
     type: Number,
-    required: true,
     //default: 2
   },
   practiseCredits: {
     type: Number,
-    required: true,
     //default: 0
+  },
+  optionCredits: {
+    type: String,
   },
   idSubjectCombination: {
     type: mongoose.Schema.Types.ObjectId,
