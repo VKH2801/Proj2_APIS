@@ -93,6 +93,12 @@ const updateOutputType = async (req, res) => {
       return;
     }
     const findUser = await User.findOne({ _id: idUserLatestEdit });
+    if (!findUser) {
+      return res.status(401).json({
+        code: 401,
+        message: "Invalid user for update",
+      });
+    }
     if (findOutput) {
       req.body.createdBy = findOutput.createdBy;
       if (!req.body.listIdUserEdited) {

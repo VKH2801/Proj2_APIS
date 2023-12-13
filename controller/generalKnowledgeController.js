@@ -21,7 +21,7 @@ const getAllGeneralKnowledge = async (req, res) => {
 
 const getByIdGeneralKnowledge = async (req, res) => {
   try {
-    const data = await GeneralKnowledge.findOne({ _id: req.params.id });
+    const data = await GeneralKnowledge.findById({ _id: req.params.id });
     if (!req.params.id) {
       res.status(401).json({
         code: 401,

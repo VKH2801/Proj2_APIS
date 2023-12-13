@@ -19,7 +19,7 @@ const getAllOverview = async (req, res) => {
 };
 const getOverviewById = async (req, res) => {
   try {
-    let data = await Overview.findOne({ _id: req.params.id });
+    let data = await Overview.findById({ _id: req.params.id });
     if (!req.params.id) {
       res.status(401).json({
         code: 401,

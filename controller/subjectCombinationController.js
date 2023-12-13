@@ -22,9 +22,9 @@ const getAllSubCombination = async (req, res) => {
 
 const getByIdSubjCombination = async (req, res) => {
   try {
-    const findByIdCombination = await SubjectCombination.findOne({
+    const findByIdCombination = await SubjectCombination.findById({
       _id: req.params.id,
-    });
+    }).populate('idGeneralKnowledge');
     if (findByIdCombination) {
       res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,

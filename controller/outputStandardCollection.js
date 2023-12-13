@@ -22,25 +22,16 @@ const getAllOutputStandard = async (req, res) => {
 
 const getOutputStandardById = async (req, res) => {
   try {
-    let findOutputStandard = await OutputStanadard.findOne({ _id: req.params.id });
-    const findOutType = await OutputType.findOne({ _id: findOutputStandard._id});
-    const findUserCreate = await User.findOne({ _id: findOutputStandard.createdBy});
-    const findUserUpdate = await User.findOne({ _id: findOutputStandard.idUserLatestEdit});
+    let findOutputStandard = await OutputStanadard.findOne({ _id: req.params.id }).populate('idOutputType');
     if (!req.params.id) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401,
       })
     }
-    const result = {
-      ...findOutputStandard,
-      idOutputType: findOutType ? findOutType : null,
-      idUserLatestEdit: findUserUpdate ? findUserUpdate : null, 
-      createdBy: findUserCreate ? findUserCreate : null,
-    }
     return res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
-      data: result,
+      data: findOutputStandard,
       message: Res.MessageRes.status200,
     });
   } catch (err) {
@@ -136,15 +127,16 @@ const updateOutputStandard = async (req, res) => {
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
         data.listIdUserEdited.push(data.idUserLatestEdit);
       }
-      await findOutputStandard.updateOne({ $set: lodash.omit(data, 'id') });
-      const findOutputType = await OutputType.findOne({ _id:  findOutputStandard.idOutputType});
-      let result = {
-        ...OutputStanadard,
-        idOutputType: findOutputType ? findOutputType : null,
-      }
+      const findOutputType = await OutputStanadard.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: lodash.omit(data, "id") },
+        { new: true }
+      ).populate('idOutputType').populate("idUserLatestEdit").populate("createdBy");
+      // const findOutputType = await OutputType.findOne({ _id:  findOutputStandard.idOutputType}).populate('idOutputType').populate("idUserLatestEdit").populate("createdBy");
+
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
-        data: result,
+        data: findOutputType,
         message: Res.MessageRes.status200,
       })
     } else {
