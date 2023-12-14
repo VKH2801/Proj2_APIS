@@ -123,14 +123,13 @@ const createNewSubjectDetails = async (req, res) => {
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
-    })
+    });
     await newSubjectDetails.save();
     return res.status(STATUS.CodeRes.CodeOk).json({
       code: STATUS.CodeRes.CodeOk,
       data: newSubjectDetails,
-      message: 'OK',
-    })
-
+      message: "OK",
+    });
   } catch (err) {
     res.status(STATUS.CodeRes.CodeCatchErorr).json({
       code: STATUS.CodeRes.CodeCatchErorr,
@@ -145,28 +144,33 @@ const updateSubjectsDetails = async (req, res) => {
     if (!data.idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         data: STATUS.CodeRes.CodeMissingRequiredData,
-        message: 'Missing required data: idUserLatestEdit',
-      })
+        message: "Missing required data: idUserLatestEdit",
+      });
     }
 
-
-    const findSubjectDetailsInfo = await SubjectDetails.findOne({_id: req.params.id});
+    const findSubjectDetailsInfo = await SubjectDetails.findOne({
+      _id: req.params.id,
+    });
     if (!data.idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeUserInvalid).json({
         code: STATUS.CodeRes.CodeUserInvalid,
-        message: 'Missing idUserLatestEdit',
-      })
+        message: "Missing idUserLatestEdit",
+      });
     }
 
-
     if (data.idSubjectCombination) {
-      if (data.idSubjectCombination !== findSubjectDetailsInfo.idSubjectCombination) {
-        const findSubjectCombinationInfo = await SubjectCombination.findOne({ _id: data.idSubjectCombination });
+      if (
+        data.idSubjectCombination !==
+        findSubjectDetailsInfo.idSubjectCombination
+      ) {
+        const findSubjectCombinationInfo = await SubjectCombination.findOne({
+          _id: data.idSubjectCombination,
+        });
         if (!findSubjectCombinationInfo) {
           return res.status(STATUS.CodeRes.CodeNonExistData).json({
             code: STATUS.CodeRes.CodeNonExistData,
-            message: 'Invalid idSubjectCombination for update',
-          })
+            message: "Invalid idSubjectCombination for update",
+          });
         } else {
           data.idSubjectCombination = findSubjectCombinationInfo;
         }
@@ -175,15 +179,16 @@ const updateSubjectsDetails = async (req, res) => {
       data.idSubjectCombination = findSubjectDetailsInfo.idSubjectCombination;
     }
 
-    
     if (data.idOutputStandard) {
       if (data.idOutputStandard !== findSubjectDetailsInfo.idOutputStandard) {
-        const findOutputStandardInfo = await OutputStandard.findOne({ _id: data.idOutputStandard});
+        const findOutputStandardInfo = await OutputStandard.findOne({
+          _id: data.idOutputStandard,
+        });
         if (!findOutputStandardInfo) {
           return res.status(STATUS.CodeRes.CodeNonExistData).json({
             code: STATUS.CodeRes.CodeNonExistData,
-            message: 'Invalid idOutputStandard for update',
-          })
+            message: "Invalid idOutputStandard for update",
+          });
         } else {
           data.idOutputStandard = findOutputStandardInfo;
         }
@@ -191,16 +196,20 @@ const updateSubjectsDetails = async (req, res) => {
     } else {
       data.idOutputStandard = findSubjectDetailsInfo.idOutputStandard;
     }
-    
-    
+
     if (data.idClassificationScale) {
-      if (data.idClassificationScale !== findSubjectDetailsInfo.idClassificationScale) {
-        const findClassificationScaleInfo = await ClassificationScale.findOne({_id: data.idClassificationScale});
+      if (
+        data.idClassificationScale !==
+        findSubjectDetailsInfo.idClassificationScale
+      ) {
+        const findClassificationScaleInfo = await ClassificationScale.findOne({
+          _id: data.idClassificationScale,
+        });
         if (!findClassificationScaleInfo) {
           return res.status(STATUS.CodeRes.CodeNonExistData).json({
             code: STATUS.CodeRes.CodeNonExistData,
-            message: 'Invalid idClassificationScale for update',
-          })
+            message: "Invalid idClassificationScale for update",
+          });
         } else {
           data.idClassificationScale = findClassificationScaleInfo;
         }
@@ -208,18 +217,19 @@ const updateSubjectsDetails = async (req, res) => {
     } else {
       data.idClassificationScale = findSubjectDetailsInfo.idClassificationScale;
     }
-    
 
     if (findSubjectDetailsInfo) {
       data.listIdUserEdited = findSubjectDetailsInfo.listIdUserEdited;
       data.createdBy = findSubjectDetailsInfo.createdBy;
 
-      const findUserForEdit = await User.findOne({_id: data.idUserLatestEdit});
+      const findUserForEdit = await User.findOne({
+        _id: data.idUserLatestEdit,
+      });
       if (!findUserForEdit) {
         return res.status(STATUS.CodeRes.CodeUserInvalid).json({
           code: STATUS.CodeRes.CodeUserInvalid,
-          message: 'Invalid id user for update',
-        })
+          message: "Invalid id user for update",
+        });
       }
 
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {

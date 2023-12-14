@@ -38,8 +38,8 @@ const getRefDocById = async (req, res) => {
     } else {
       res.status(403).json({
         code: 403,
-        message: 'Non existent data'
-      })
+        message: "Non existent data",
+      });
     }
   } catch (err) {
     res.status(500).json({
@@ -94,14 +94,14 @@ const createReferencesDoc = async (req, res) => {
 
 const updateReferences = async (req, res) => {
   try {
-    let { title, domesticContent, nonDomesticContent, idUserLatestEdit } = req.body;
+    let { title, domesticContent, nonDomesticContent, idUserLatestEdit } =
+      req.body;
     if (!idUserLatestEdit) {
       return res.status(401).json({
         code: 401,
         message: "Missing User ID for update references document",
       });
     }
-
 
     const findUserLatestEdit = await User.findOne({ _id: idUserLatestEdit });
     if (!findUserLatestEdit) {

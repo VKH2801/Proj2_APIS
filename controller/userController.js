@@ -54,8 +54,16 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   try {
-    let { email, password, role, gender, lastName, firstName, phoneNumber, avatar } =
-      req.body;
+    let {
+      email,
+      password,
+      role,
+      gender,
+      lastName,
+      firstName,
+      phoneNumber,
+      avatar,
+    } = req.body;
     console.log(req.body);
     let findUser = await User.findOne({ email: email });
 
@@ -165,7 +173,17 @@ const deleteUserWith = async (req, res) => {
     let data = req.body;
     if (data) {
       await data.deleteMany({
-        $set: lodash.omit(req.body, "email", "_id", "password", "role", "gender", "lastName", "firstName", "phoneNumber"),
+        $set: lodash.omit(
+          req.body,
+          "email",
+          "_id",
+          "password",
+          "role",
+          "gender",
+          "lastName",
+          "firstName",
+          "phoneNumber"
+        ),
       });
       res.status(200).json({
         code: 200,
