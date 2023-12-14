@@ -105,12 +105,12 @@ const createOverview = async (req, res) => {
         availableYear: availableYear,
         credits: credits,
         duration: duration,
-        goals: goals,
-        prospectAfterGraduation: prospectAfterGraduation,
-        applicableSubjects: applicableSubjects,
-        goalsTraining: goalsTraining,
-        goalsAfterTraining: goalsAfterTraining,
-        perspectivesTraining: perspectivesTraining,
+        goals: goals ?? "",
+        prospectAfterGraduation: prospectAfterGraduation ?? "",
+        applicableSubjects: applicableSubjects ?? "",
+        goalsTraining: goalsTraining ?? "",
+        goalsAfterTraining: goalsAfterTraining ?? "",
+        perspectivesTraining: perspectivesTraining ?? "",
         idUserLatestEdit: findUserForCreate._id,
         listIdUserEdited: [findUserForCreate._id],
         createdBy: findUserForCreate._id,
@@ -158,45 +158,43 @@ const updateOverview = async (req, res) => {
 
     if (findOverview) {
       req.body.listIdUserEdited = findOverview.listIdUserEdited
-          ? findOverview.listIdUserEdited
-          : [];
-        req.body.createdBy = findOverview.createdBy
-          ? findOverview.createdBy
-          : "";
-        if (!req.body.listIdUserEdited.includes(idUserLatestEdit)) {
-          req.body.listIdUserEdited.push(findUserEdit._id);
-        }
-        const result = await Overview.findByIdAndUpdate(
-          { _id: req.params.id },
-          { $set: lodash.omit(req.body, "_id") },
-          { new: true }
-        );
-        // const responseData = {
-        //   _id: result._id,
-        //   eduName: result.eduName,
-        //   eduType: result.eduType,
-        //   applicableSubjects: result.applicableSubjects,
-        //   goalsTraining: result.goalsTraining ? result.goalsTraining : "",
-        //   goalsAfterTraining: result.goalsAfterTraining
-        //     ? result.goalsAfterTraining.goalsAfterTraining
-        //     : "",
-        //   perspectivesTraining: result.perspectivesTraining
-        //     ? result.perspectivesTraining
-        //     : "",
+        ? findOverview.listIdUserEdited
+        : [];
+      req.body.createdBy = findOverview.createdBy ? findOverview.createdBy : "";
+      if (!req.body.listIdUserEdited.includes(idUserLatestEdit)) {
+        req.body.listIdUserEdited.push(findUserEdit._id);
+      }
+      const result = await Overview.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: lodash.omit(req.body, "_id") },
+        { new: true }
+      );
+      // const responseData = {
+      //   _id: result._id,
+      //   eduName: result.eduName,
+      //   eduType: result.eduType,
+      //   applicableSubjects: result.applicableSubjects,
+      //   goalsTraining: result.goalsTraining ? result.goalsTraining : "",
+      //   goalsAfterTraining: result.goalsAfterTraining
+      //     ? result.goalsAfterTraining.goalsAfterTraining
+      //     : "",
+      //   perspectivesTraining: result.perspectivesTraining
+      //     ? result.perspectivesTraining
+      //     : "",
 
-        //   idUserLatestEdit: findUserEdit,
-        //   listIdUserEdited: result.listIdUserEdited
-        //     ? result.listIdUserEdited
-        //     : "",
-        //   createdBy: findUserCreated ? findUserCreated : result.createdBy,
-        //   createdAt: result.createdAt,
-        //   updatedAt: result.updatedAt,
-        // };
-        return res.status(200).json({
-          code: 200,
-          data: lodash.omit(result.toObject()),
-          message: "OK",
-        });
+      //   idUserLatestEdit: findUserEdit,
+      //   listIdUserEdited: result.listIdUserEdited
+      //     ? result.listIdUserEdited
+      //     : "",
+      //   createdBy: findUserCreated ? findUserCreated : result.createdBy,
+      //   createdAt: result.createdAt,
+      //   updatedAt: result.updatedAt,
+      // };
+      return res.status(200).json({
+        code: 200,
+        data: lodash.omit(result.toObject()),
+        message: "OK",
+      });
     }
   } catch (err) {
     res.status(500).json({

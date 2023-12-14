@@ -52,8 +52,8 @@ const createNewTrainingReg = async (req, res) => {
       });
     }
     let trainingReg = new TrainingRegulation({
-      title: title,
-      content: content,
+      title: title ?? "",
+      content: content ?? "",
       idUserLatestEdit: findUserIdCreate,
       listIdUserEdited: [findUserIdCreate],
       createdBy: findUserIdCreate,

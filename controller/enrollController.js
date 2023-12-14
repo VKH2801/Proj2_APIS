@@ -45,7 +45,7 @@ const getEnrollById = async (req, res) => {
 const createNewEnroll = async (req, res) => {
   try {
     let { title, content, createdBy } = req.body;
-    if (!title || !content || !createdBy) {
+    if (!createdBy) {
       res.status(ResStatus.CodeRes.CodeMissingRequiredData).json({
         code: ResStatus.CodeRes.CodeMissingRequiredData,
         message: ResStatus.MessageRes.status401,
@@ -60,8 +60,8 @@ const createNewEnroll = async (req, res) => {
       });
     }
     let enroll = new Enroll({
-      title: title,
-      content: content,
+      title: title ?? "",
+      content: content ?? "",
       idUserLatestEdit: findUserCreate,
       listIdUserEdited: [findUserCreate],
       createdBy: findUserCreate,

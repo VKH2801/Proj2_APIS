@@ -6,7 +6,9 @@ const GENERALKNOWNLEDGE = require("../models/generalKnowledgeModel");
 
 const getAllSubCombination = async (req, res) => {
   try {
-    const findSubjCombination = await SubjectCombination.find().populate('idGeneralKnowledge');
+    const findSubjCombination = await SubjectCombination.find().populate(
+      "idGeneralKnowledge"
+    );
     res.status(200).json({
       code: 200,
       data: findSubjCombination,
@@ -24,7 +26,7 @@ const getByIdSubjCombination = async (req, res) => {
   try {
     const findByIdCombination = await SubjectCombination.findById({
       _id: req.params.id,
-    }).populate('idGeneralKnowledge');
+    }).populate("idGeneralKnowledge");
     if (findByIdCombination) {
       res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,
@@ -79,10 +81,10 @@ const createSubjCombination = async (req, res) => {
     }
 
     const newSubjCombination = new SubjectCombination({
-      content: content,
-      title: title,
-      totalCredits: totalCredits,
-      percents: percents,
+      content: content ?? "",
+      title: title ?? "",
+      totalCredits: totalCredits ?? 0,
+      percents: percents ?? 0,
       idGeneralKnowledge: findGeneralKnowledge,
       idUserLatestEdit: findUserForCreate,
       listIdUserEdited: [findUserForCreate],
@@ -114,12 +116,14 @@ const updateSubjCombination = async (req, res) => {
     }
 
     if (data.idGeneralKnowledge) {
-      const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({_id: data.idGeneralKnowledge});
+      const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({
+        _id: data.idGeneralKnowledge,
+      });
       if (!findGenKnowledgeUpdate) {
-       return res.status(401).json({
-        code: 401,
-        message: 'Invalid General knowledge for update',
-       })
+        return res.status(401).json({
+          code: 401,
+          message: "Invalid General knowledge for update",
+        });
       }
     }
 

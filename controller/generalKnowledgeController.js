@@ -51,9 +51,8 @@ const getByIdGeneralKnowledge = async (req, res) => {
 
 const createNewGeneralKnowledge = async (req, res) => {
   try {
-    const { id, title, idUserLatestEdit, listIdUserEdited, createdBy } =
-      req.body;
-    if (!title || !createdBy) {
+    const { title, createdBy } = req.body;
+    if (!createdBy) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
         message: STATUS.MessageRes.status401,
@@ -68,7 +67,7 @@ const createNewGeneralKnowledge = async (req, res) => {
       });
     }
     const newGeneralKnowledge = new GeneralKnowledge({
-      title: title,
+      title: title ?? "",
       idUserLatestEdit: findUserForCreate,
       listIdUserEdited: [findUserForCreate],
       createdBy: findUserForCreate,
@@ -79,7 +78,6 @@ const createNewGeneralKnowledge = async (req, res) => {
       data: result,
       message: STATUS.MessageRes.status200,
     });
-
   } catch (err) {
     return res.status(STATUS.CodeRes.CodeCatchErorr).json({
       code: STATUS.CodeRes.CodeCatchErorr,
@@ -90,17 +88,19 @@ const createNewGeneralKnowledge = async (req, res) => {
 
 const updateGeneralKnowledge = async (req, res) => {
   try {
-    const {title, idUserLatestEdit, createdBy} = req.body;
+    const { title, idUserLatestEdit, createdBy } = req.body;
     if (!idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
         message: STATUS.MessageRes.status401,
-      })
+      });
     }
 
-    const findGeneralKnowledge = await GeneralKnowledge.findOne({_id: req.params.id});
+    const findGeneralKnowledge = await GeneralKnowledge.findOne({
+      _id: req.params.id,
+    });
 
-    const findUserForEdit = await User.findOne({_id: idUserLatestEdit});
+    const findUserForEdit = await User.findOne({ _id: idUserLatestEdit });
 
     // if (req.body.id !== findGeneralKnowledge.id) {
     //   return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
@@ -115,7 +115,7 @@ const updateGeneralKnowledge = async (req, res) => {
         message: STATUS.MessageRes.status405,
       });
     }
-    
+
     // if (createdBy !== findGeneralKnowledge.createdBy) {
     //   return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
     //     code: STATUS.CodeRes.CodeUnableUpdateId,
@@ -131,22 +131,22 @@ const updateGeneralKnowledge = async (req, res) => {
       }
 
       await GeneralKnowledge.findByIdAndUpdate(
-        {_id: req.params.id},
-        { $set: lodash.omit(req.body)},
+        { _id: req.params.id },
+        { $set: lodash.omit(req.body) },
         { new: true }
-      )
-      
-      const data = await GeneralKnowledge.findOne({_id: req.params.id});
+      );
+
+      const data = await GeneralKnowledge.findOne({ _id: req.params.id });
       return res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,
         data: data,
         message: STATUS.MessageRes.status200,
-      })
+      });
     } else {
       return res.status(STATUS.CodeRes.CodeNonExistData).json({
         code: STATUS.CodeRes.CodeNonExistData,
         message: STATUS.MessageRes.status403,
-      })
+      });
     }
   } catch (err) {
     return res.status(STATUS.CodeRes.CodeCatchErorr).json({
@@ -176,11 +176,11 @@ const deleteAllGeneralKnowledge = async (req, res) => {
       message: err.message,
     });
   }
-}
+};
 
 const deleteByIdGeneralKnowledge = async (req, res) => {
   try {
-    const result = await GeneralKnowledge.deleteOne({_id: req.params.id});
+    const result = await GeneralKnowledge.deleteOne({ _id: req.params.id });
     if (result.deletedCount > 0) {
       res.status(200).json({
         code: 200,
