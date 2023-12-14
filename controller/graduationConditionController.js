@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 
 const getAllGraduationConditions = async (req, res) => {
   try {
-    let data = await GraduationCondition.find();
+    let data = await GraduationCondition.find().populate('idOverView');
     res.status(200).json({
       code: 200,
       data: data,

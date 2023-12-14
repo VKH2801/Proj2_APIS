@@ -6,7 +6,7 @@ const GENERALKNOWNLEDGE = require("../models/generalKnowledgeModel");
 
 const getAllSubCombination = async (req, res) => {
   try {
-    const findSubjCombination = await SubjectCombination.find();
+    const findSubjCombination = await SubjectCombination.find().populate('idGeneralKnowledge');
     res.status(200).json({
       code: 200,
       data: findSubjCombination,
