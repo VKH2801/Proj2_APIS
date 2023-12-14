@@ -83,7 +83,7 @@ const createGraduationCondition = async (req, res) => {
     if (findOverviewRef) {
       let newGraduationCondition = new GraduationCondition({
         content: content,
-        title: title,
+        title: title ?? '',
         idOverView: findOverviewRef,
         idUserLatestEdit: findUserCreate,
         listIdUserEdited: [findUserCreate._id],
@@ -126,6 +126,8 @@ const updateGraduationCondition = async (req, res) => {
         });
         return;
       }
+    }else {
+      data.idOverView = findGraduationCondition.idOverView;
     }
 
     if (!data.idUserLatestEdit) {
@@ -154,9 +156,9 @@ const updateGraduationCondition = async (req, res) => {
 
       const result = await GraduationCondition.findByIdAndUpdate(
         { _id: req.params.id },
-        { $set: lodash.omit(data, "_id") },
+        { $set: lodash.omit(data, "createdBy") },
         { new: true }
-      );
+      ).populate("idOverView");
       if (result) {
         res.status(200).json({
           code: 200,
