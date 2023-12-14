@@ -121,22 +121,33 @@ const updateOutputStandard = async (req, res) => {
         message: 'Invalid user',
       })
     }
+    
     if (findOutputStandard) {
+      if (data.idOutputType) {
+        const findOutputType = await OutputType.findById({_id: data.idOutputType})
+        if (!findOutputType) {
+          return res.status(401).json({
+            code: 401,
+            message: 'Invalid output type',
+          })
+        }
+      } else {
+        data.idOutputType = findOutputStandard.idOutputType;
+      }
       data.listIdUserEdited = findOutputStandard.listIdUserEdited;
       data.createdBy = findOutputStandard.createdBy;
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
         data.listIdUserEdited.push(data.idUserLatestEdit);
       }
-      const findOutputType = await OutputStanadard.findByIdAndUpdate(
+      const findOutputStandard = await OutputStanadard.findByIdAndUpdate(
         { _id: req.params.id },
         { $set: lodash.omit(data, "id") },
         { new: true }
-      ).populate('idOutputType').populate("idUserLatestEdit").populate("createdBy");
-      // const findOutputType = await OutputType.findOne({ _id:  findOutputStandard.idOutputType}).populate('idOutputType').populate("idUserLatestEdit").populate("createdBy");
+      ).populate('idOutputType')
 
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
-        data: findOutputType,
+        data: findOutputStandard,
         message: Res.MessageRes.status200,
       })
     } else {
