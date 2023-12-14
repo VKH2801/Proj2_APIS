@@ -6,7 +6,7 @@ const Res = require("../utils/ResStatus");
 
 const getAllOutputStandard = async (req, res) => {
   try {
-    let data = await OutputStanadard.find();
+    let data = await OutputStanadard.find().populate('idOutputType');
     res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
       data: data,
