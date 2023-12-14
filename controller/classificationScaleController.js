@@ -6,7 +6,7 @@ const User = require("../models/userModel");
 
 const getAllClassifications = async (req, res) => {
   try {
-    const findCls = await ClassificationScale.find();
+    const findCls = await ClassificationScale.find().populate('idOutputType');
     return res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
       data: findCls,
