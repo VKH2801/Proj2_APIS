@@ -70,9 +70,9 @@ const createReferencesDoc = async (req, res) => {
       });
     }
     const newRefDoc = new ReferenceDoc({
-      title: title,
-      domesticContent: domesticContent,
-      nonDomesticContent: nonDomesticContent,
+      title: title ?? "",
+      domesticContent: domesticContent ?? "",
+      nonDomesticContent: nonDomesticContent ?? "",
       idUserLatestEdit: findUserCreated,
       listIdUserEdited: [findUserCreated],
       createdBy: findUserCreated,

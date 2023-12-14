@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 
 const getAllGraduationConditions = async (req, res) => {
   try {
-    let data = await GraduationCondition.find().populate('idOverView');
+    let data = await GraduationCondition.find().populate("idOverView");
     res.status(200).json({
       code: 200,
       data: data,
@@ -21,7 +21,9 @@ const getAllGraduationConditions = async (req, res) => {
 
 const getGraduationConditionsById = async (req, res) => {
   try {
-    let data = await GraduationCondition.findOne({ _id: req.params.id }).populate('idOverView');
+    let data = await GraduationCondition.findOne({
+      _id: req.params.id,
+    }).populate("idOverView");
     if (!req.params.id) {
       res.status(401).json({
         code: 401,
@@ -82,8 +84,8 @@ const createGraduationCondition = async (req, res) => {
     const findOverviewRef = await Overview.findOne({ _id: idOverView });
     if (findOverviewRef) {
       let newGraduationCondition = new GraduationCondition({
-        content: content,
-        title: title ?? '',
+        content: content ?? "",
+        title: title ?? "",
         idOverView: findOverviewRef,
         idUserLatestEdit: findUserCreate,
         listIdUserEdited: [findUserCreate._id],
@@ -126,7 +128,7 @@ const updateGraduationCondition = async (req, res) => {
         });
         return;
       }
-    }else {
+    } else {
       data.idOverView = findGraduationCondition.idOverView;
     }
 

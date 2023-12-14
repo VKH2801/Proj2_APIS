@@ -60,8 +60,8 @@ const createNewOutputType = async (req, res) => {
       });
     }
     const newOutputType = new OutputType({
-      title: title,
-      content: content,
+      title: title ?? "",
+      content: content ?? "",
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,

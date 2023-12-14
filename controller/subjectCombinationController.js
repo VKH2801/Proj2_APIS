@@ -79,10 +79,10 @@ const createSubjCombination = async (req, res) => {
     }
 
     const newSubjCombination = new SubjectCombination({
-      content: content,
-      title: title,
-      totalCredits: totalCredits,
-      percents: percents,
+      content: content ?? "",
+      title: title ?? "",
+      totalCredits: totalCredits ?? 0,
+      percents: percents ?? 0,
       idGeneralKnowledge: findGeneralKnowledge,
       idUserLatestEdit: findUserForCreate,
       listIdUserEdited: [findUserForCreate],
