@@ -62,7 +62,7 @@ const createClassifyScale = async (req, res) => {
         code: Res.CodeRes.CodeNonExistData,
         message:
           Res.MessageRes.status403 +
-          "output type with id: " +
+          " output type with id: " +
           req.body.idOutputType,
       });
     }
@@ -75,13 +75,14 @@ const createClassifyScale = async (req, res) => {
       });
     }
     let newCls = new ClassificationScale({
+      code: data.code ?? '',
       level: data.level ?? 0,
-      nameLevel: req.body.nameLevel ?? "",
-      discription: req.body.discription ?? "",
+      nameLevel: data.nameLevel ?? "",
+      discription: data.discription ?? "",
       idOutputType: findOutputType,
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
-      createdBy: [findUser],
+      createdBy: findUser,
     });
     const result = await newCls.save();
     //const result = await ClassificationScale.findOne({ idLevel: req.body.idLevel });
@@ -101,16 +102,17 @@ const createClassifyScale = async (req, res) => {
 const updateCls = async (req, res) => {
   try {
     const findCls = await ClassificationScale.findOne({ _id: req.params.id });
-    //console.log(findCls);
+
     if (!req.body.idUserLatestEdit) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401,
       });
     }
-    const findOutputType = await OutputType.findOne({
-      _id: req.body.idOutputType ?? findCls.idOutputType,
-    });
+
+
+    const outputTypeId = req.body.idOutputType ? req.body.idOutputType : findCls.idOutputType;
+    const findOutputType = await OutputType.findOne({ _id: outputTypeId });
     if (!findOutputType) {
       return res.status(Res.CodeRes.CodeNonExistData).json({
         code: Res.CodeRes.CodeNonExistData,
@@ -129,16 +131,15 @@ const updateCls = async (req, res) => {
       });
     }
 
+
+
     if (findCls) {
-      const result = await findCls
-        .findByIdAndUpdate(
-          { _id: req.params.id },
-          { $set: lodash.omit(req.body, "_id") },
-          { new: true }
-        )
-        .populate("idOutputType");
-      //const result = await ClassificationScale.findOne({_id: req.params.id});
-      //console.log(result);
+      const result = await ClassificationScale.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: lodash.omit(req.body, "_id") },
+        { new: true }
+      ).populate("idOutputType");
+
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
         data: lodash.omit(result.toObject()),
@@ -157,6 +158,7 @@ const updateCls = async (req, res) => {
     });
   }
 };
+
 
 const deleteAll = async (req, res) => {
   try {

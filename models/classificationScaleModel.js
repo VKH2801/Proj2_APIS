@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const classificationScale = mongoose.Schema({
+  code: {
+    type: String,
+    require: true,
+  },
   level: {
     type: Number,
     require: true,
