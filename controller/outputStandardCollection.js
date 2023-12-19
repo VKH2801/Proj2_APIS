@@ -107,7 +107,7 @@ const createOutputStandard = async (req, res) => {
 
 const updateOutputStandard = async (req, res) => {
   try {
-    let findOutputStandard = await OutputStanadard.findOne({
+    const findOutputStandard = await OutputStanadard.findOne({
       _id: req.params.id,
     });
     let data = req.body;
@@ -144,7 +144,7 @@ const updateOutputStandard = async (req, res) => {
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
         data.listIdUserEdited.push(data.idUserLatestEdit);
       }
-      const findOutputStandard = await OutputStanadard.findByIdAndUpdate(
+      const updatedOutputStandard = await OutputStanadard.findByIdAndUpdate(
         { _id: req.params.id },
         { $set: lodash.omit(data, "id") },
         { new: true }
@@ -152,7 +152,7 @@ const updateOutputStandard = async (req, res) => {
 
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
-        data: findOutputStandard,
+        data: updatedOutputStandard,
         message: Res.MessageRes.status200,
       });
     } else {
