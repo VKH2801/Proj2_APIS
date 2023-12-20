@@ -75,7 +75,7 @@ const createClassifyScale = async (req, res) => {
       });
     }
     let newCls = new ClassificationScale({
-      code: data.code ?? '',
+      code: data.code ?? "",
       level: data.level ?? 0,
       nameLevel: data.nameLevel ?? "",
       discription: data.discription ?? "",
@@ -99,9 +99,73 @@ const createClassifyScale = async (req, res) => {
   }
 };
 
+// const updateCls = async (req, res) => {
+//   try {
+//     const findCls = await ClassificationScale.findOne({ _id: req.params.id });
+
+//     if (!req.body.idUserLatestEdit) {
+//       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
+//         code: Res.CodeRes.CodeMissingRequiredData,
+//         message: Res.MessageRes.status401,
+//       });
+//     }
+
+//     const outputTypeId = req.body.idOutputType ? req.body.idOutputType : findCls.idOutputType;
+//     const findOutputType = await OutputType.findOne({ _id: outputTypeId });
+//     if (!findOutputType) {
+//       return res.status(Res.CodeRes.CodeNonExistData).json({
+//         code: Res.CodeRes.CodeNonExistData,
+//         message:
+//           Res.MessageRes.status403 +
+//           " output type with id: " +
+//           req.body.idOutputType,
+//       });
+//     }
+
+//     const findUser = await User.findById({ _id: req.body.idUserLatestEdit });
+//     if (!findUser) {
+//       return res.status(Res.CodeRes.CodeNonExistData).json({
+//         code: Res.CodeRes.CodeNonExistData,
+//         message: Res.MessageRes.status403,
+//       });
+//     }
+
+//     if (findCls) {
+//       const result = await ClassificationScale.findByIdAndUpdate(
+//         { _id: req.params.id },
+//         { $set: lodash.omit(req.body, "_id") },
+//         { new: true }
+//       ).populate("idOutputType");
+
+//       return res.status(Res.CodeRes.CodeOk).json({
+//         code: Res.CodeRes.CodeOk,
+//         data: lodash.omit(result.toObject()),
+//         message: Res.MessageRes.status200,
+//       });
+//     } else {
+//       return res.status(Res.CodeRes.CodeNonExistData).json({
+//         code: Res.CodeRes.CodeNonExistData,
+//         message: Res.MessageRes.status403 + " with id: " + req.params.id,
+//       });
+//     }
+//   } catch (err) {
+//     res.status(Res.CodeRes.CodeCatchErorr).json({
+//       code: Res.CodeRes.CodeCatchErorr,
+//       message: err.message,
+//     });
+//   }
+// };
+
 const updateCls = async (req, res) => {
   try {
     const findCls = await ClassificationScale.findOne({ _id: req.params.id });
+
+    if (!findCls) {
+      return res.status(Res.CodeRes.CodeNonExistData).json({
+        code: Res.CodeRes.CodeNonExistData,
+        message: Res.MessageRes.status403 + " with id: " + req.params.id,
+      });
+    }
 
     if (!req.body.idUserLatestEdit) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
@@ -110,8 +174,9 @@ const updateCls = async (req, res) => {
       });
     }
 
-
-    const outputTypeId = req.body.idOutputType ? req.body.idOutputType : findCls.idOutputType;
+    const outputTypeId = req.body.idOutputType
+      ? req.body.idOutputType
+      : findCls.idOutputType;
     const findOutputType = await OutputType.findOne({ _id: outputTypeId });
     if (!findOutputType) {
       return res.status(Res.CodeRes.CodeNonExistData).json({
@@ -131,26 +196,27 @@ const updateCls = async (req, res) => {
       });
     }
 
+    req.body.listIdUserEdited = findCls.listIdUserEdited;
+      req.body.createdBy = findCls.createdBy;
+      if (!req.body.listIdUserEdited.includes(req.body.idUserLatestEdit)) {
+        req.body.listIdUserEdited.push(req.body.idUserLatestEdit);
+      }
+    
+    // Update the code here to use lodash.omit and populate the idOutputType
+    const data = lodash.omit(req.body, "_id");
+    data.idOutputType = outputTypeId; // Assign the correct idOutputType
 
+    const result = await ClassificationScale.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: data },
+      { new: true }
+    ).populate("idOutputType");
 
-    if (findCls) {
-      const result = await ClassificationScale.findByIdAndUpdate(
-        { _id: req.params.id },
-        { $set: lodash.omit(req.body, "_id") },
-        { new: true }
-      ).populate("idOutputType");
-
-      return res.status(Res.CodeRes.CodeOk).json({
-        code: Res.CodeRes.CodeOk,
-        data: lodash.omit(result.toObject()),
-        message: Res.MessageRes.status200,
-      });
-    } else {
-      return res.status(Res.CodeRes.CodeNonExistData).json({
-        code: Res.CodeRes.CodeNonExistData,
-        message: Res.MessageRes.status403 + " with id: " + req.params.id,
-      });
-    }
+    return res.status(Res.CodeRes.CodeOk).json({
+      code: Res.CodeRes.CodeOk,
+      data: lodash.omit(result.toObject()),
+      message: Res.MessageRes.status200,
+    });
   } catch (err) {
     res.status(Res.CodeRes.CodeCatchErorr).json({
       code: Res.CodeRes.CodeCatchErorr,
@@ -158,7 +224,6 @@ const updateCls = async (req, res) => {
     });
   }
 };
-
 
 const deleteAll = async (req, res) => {
   try {
