@@ -3,6 +3,7 @@ const OutputStanadard = require("../models/outputStandard");
 const OutputType = require("../models/outputTypeModel");
 const User = require("../models/userModel");
 const Res = require("../utils/ResStatus");
+const mongoose = require('mongoose');
 
 const getAllOutputStandard = async (req, res) => {
   try {
@@ -127,9 +128,7 @@ const updateOutputStandard = async (req, res) => {
 
     if (findOutputStandard) {
       if (data.idOutputType) {
-        const findOutputType = await OutputType.findById({
-          _id: data.idOutputType,
-        });
+        const findOutputType = await OutputType.findById(data.idOutputType);
         if (!findOutputType) {
           return res.status(401).json({
             code: 401,
@@ -137,8 +136,16 @@ const updateOutputStandard = async (req, res) => {
           });
         }
       } else {
-        data.idOutputType = findOutputStandard.idOutputType;
-      }
+        // Check if findOutputStandard.idOutputType is a valid ObjectId
+        if (mongoose.Types.ObjectId.isValid(findOutputStandard.idOutputType)) {
+          data.idOutputType = findOutputStandard.idOutputType;
+        } else {
+          return res.status(401).json({
+            code: 401,
+            message: "Invalid output type",
+          });
+        }
+      }      
       data.listIdUserEdited = findOutputStandard.listIdUserEdited;
       data.createdBy = findOutputStandard.createdBy;
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
