@@ -153,7 +153,7 @@ const updateOutputStandard = async (req, res) => {
       }
       const updatedOutputStandard = await OutputStanadard.findByIdAndUpdate(
         { _id: req.params.id },
-        { $set: lodash.omit(data, "id") },
+        { $set: lodash.omit(data) },
         { new: true }
       ).populate("idOutputType");
 
