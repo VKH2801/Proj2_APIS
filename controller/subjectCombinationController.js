@@ -47,6 +47,7 @@ const getByIdSubjCombination = async (req, res) => {
   }
 };
 
+
 const createSubjCombination = async (req, res) => {
   try {
     const {
@@ -104,10 +105,82 @@ const createSubjCombination = async (req, res) => {
   }
 };
 
+// const updateSubjCombination = async (req, res) => {
+//   try {
+//     const { idUserLatestEdit, idGeneralKnowledge } = req.body;
+//     let data = req.body;
+
+//     if (!idUserLatestEdit) {
+//       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
+//         code: STATUS.CodeRes.CodeMissingRequiredData,
+//         message: STATUS.MessageRes.status401,
+//       });
+//     }
+
+//     if (idGeneralKnowledge) {
+//       const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({
+//         _id: idGeneralKnowledge,
+//       });
+//       req.body.idGeneralKnowledge = findGenKnowledgeUpdate
+//       if (!findGenKnowledgeUpdate) {
+//         return res.status(401).json({
+//           code: 401,
+//           message: "Invalid General knowledge for update",
+//         });
+//       }
+//     } else {
+//       req.body.idGeneralKnowledge = findSubjCom.idGeneralKnowledge;
+//     }
+
+//     const findUserForEdit = await USER.findOne({ _id: idUserLatestEdit });
+//     if (!findUserForEdit) {
+//       return res.status(STATUS.CodeRes.CodeUserInvalid).json({
+//         code: STATUS.CodeRes.CodeUserInvalid,
+//         message: STATUS.MessageRes.status405,
+//       });
+//     }
+
+//     const findSubjCom = await SubjectCombination.findOne({
+//       _id: req.params.id,
+//     });
+//     if (!findSubjCom) {
+//       return res.status(STATUS.CodeRes.CodeNonExistData).json({
+//         code: STATUS.CodeRes.CodeNonExistData,
+//         message: STATUS.MessageRes.status403,
+//       });
+//     } else {
+      
+//       data.listIdUserEdited = findSubjCom.listIdUserEdited
+//         ? findSubjCom.listIdUserEdited
+//         : [];
+//       data.createdBy = findSubjCom.createdBy ? findSubjCom.createdBy : "";
+//       if (!data.listIdUserEdited.includes(idUserLatestEdit)) {
+//         data.listIdUserEdited.push(idUserLatestEdit);
+//       }
+//       const result = await SubjectCombination.findByIdAndUpdate(
+//         { _id: req.params.id },
+//         { $set: lodash.omit(data, "createdBy") },
+//         { new: true }
+//       ).populate('idGeneralKnowledge');
+//       return res.status(STATUS.CodeRes.CodeOk).json({
+//         code: STATUS.CodeRes.CodeOk,
+//         data: lodash.omit(result.toObject()),
+//         message: STATUS.MessageRes.status200,
+//       });
+//     }
+//   } catch (e) {
+//     res.status(STATUS.CodeRes.CodeCatchErorr).json({
+//       code: STATUS.CodeRes.CodeCatchErorr,
+//       message: e.message,
+//     });
+//   }
+// };
+
+
 const updateSubjCombination = async (req, res) => {
   try {
-    const { idUserLatestEdit } = req.body;
-    let data = req.body;
+    const { idUserLatestEdit, idGeneralKnowledge } = req.body;
+
     if (!idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
@@ -115,10 +188,23 @@ const updateSubjCombination = async (req, res) => {
       });
     }
 
-    if (data.idGeneralKnowledge) {
-      const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({
-        _id: data.idGeneralKnowledge,
+    const findSubjCom = await SubjectCombination.findOne({ _id: req.params.id });
+    if (!findSubjCom) {
+      return res.status(STATUS.CodeRes.CodeNonExistData).json({
+        code: STATUS.CodeRes.CodeNonExistData,
+        message: STATUS.MessageRes.status403,
       });
+    }
+
+    let data = {
+      ...req.body,
+      listIdUserEdited: [...(findSubjCom.listIdUserEdited || []), idUserLatestEdit],
+      createdBy: findSubjCom.createdBy || "",
+      idGeneralKnowledge: idGeneralKnowledge || findSubjCom.idGeneralKnowledge,
+    };
+
+    if (idGeneralKnowledge) {
+      const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({ _id: idGeneralKnowledge });
       if (!findGenKnowledgeUpdate) {
         return res.status(401).json({
           code: 401,
@@ -135,41 +221,25 @@ const updateSubjCombination = async (req, res) => {
       });
     }
 
-    const findSubjCom = await SubjectCombination.findOne({
-      _id: req.params.id,
+    const result = await SubjectCombination.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: lodash.omit(data, "createdBy") },
+      { new: true }
+    ).populate('idGeneralKnowledge');
+
+    return res.status(STATUS.CodeRes.CodeOk).json({
+      code: STATUS.CodeRes.CodeOk,
+      data: lodash.omit(result.toObject()),
+      message: STATUS.MessageRes.status200,
     });
-    if (!findSubjCom) {
-      return res.status(STATUS.CodeRes.CodeNonExistData).json({
-        code: STATUS.CodeRes.CodeNonExistData,
-        message: STATUS.MessageRes.status403,
-      });
-    } else {
-      data.idGeneralKnowledge = findSubjCom.idGeneralKnowledge;
-      data.listIdUserEdited = findSubjCom.listIdUserEdited
-        ? findSubjCom.listIdUserEdited
-        : [];
-      data.createdBy = findSubjCom.createdBy ? findSubjCom.createdBy : "";
-      if (!data.listIdUserEdited.includes(idUserLatestEdit)) {
-        data.listIdUserEdited.push(idUserLatestEdit);
-      }
-      const result = await SubjectCombination.findByIdAndUpdate(
-        { _id: req.params.id },
-        { $set: lodash.omit(data, "createdBy") },
-        { new: true }
-      );
-      return res.status(200).json({
-        code: 200,
-        data: result,
-        message: "OK",
-      });
-    }
   } catch (e) {
-    res.status(500).json({
-      code: 500,
+    res.status(STATUS.CodeRes.CodeCatchErorr).json({
+      code: STATUS.CodeRes.CodeCatchErorr,
       message: e.message,
     });
   }
 };
+
 
 const deleteAllSubjComb = async (req, res) => {
   try {
