@@ -179,7 +179,7 @@ const createSubjCombination = async (req, res) => {
 
 const updateSubjCombination = async (req, res) => {
   try {
-    const { idUserLatestEdit, idGeneralKnowledge } = req.body;
+    const { idUserLatestEdit, idGeneralKnowledge, percents, totalCredits } = req.body;
 
     if (!idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
@@ -220,7 +220,8 @@ const updateSubjCombination = async (req, res) => {
         message: STATUS.MessageRes.status405,
       });
     }
-
+    data.percents = percents;
+    data.totalCredits = totalCredits;
     const result = await SubjectCombination.findByIdAndUpdate(
       { _id: req.params.id },
       { $set: lodash.omit(data, "createdBy") },

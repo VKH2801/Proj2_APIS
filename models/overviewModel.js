@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const overviewSchema = new mongoose.Schema(
     {
-        name: {
+        title: {
             type: String,
             require: true,
             //default: 'Chương trình đào tạo cử nhân chính quy ngành Kỹ thuật Phần mềm',
