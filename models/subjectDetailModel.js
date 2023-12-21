@@ -6,7 +6,7 @@ const subjectDetails = new mongoose.Schema({
     required: true,
     //default: 'SS003',
   },
-  name: {
+  title: {
     type: String,
     required: true,
     //default: 'Tu tuong HCM'

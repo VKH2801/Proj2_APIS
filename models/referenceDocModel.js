@@ -14,6 +14,9 @@ const referenceSchema = mongoose.Schema({
     type: String,
     //default: 'content'
   },
+  type: {
+    type: String,
+  },
   idUserLatestEdit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'

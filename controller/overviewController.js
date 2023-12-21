@@ -43,7 +43,7 @@ const getOverviewById = async (req, res) => {
 const createOverview = async (req, res) => {
   try {
     let {
-      name,
+      title,
       type,
       method,
       degree,
@@ -59,7 +59,7 @@ const createOverview = async (req, res) => {
       perspectivesTraining,
       createdBy,
     } = req.body;
-    let fintOverviewName = await Overview.findOne({ name: name });
+    let fintOverviewtitle = await Overview.findOne({ title: title });
     if (!createdBy) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
@@ -73,15 +73,15 @@ const createOverview = async (req, res) => {
         message: STATUS.MessageRes.status405 + "for creation",
       });
     }
-    if (fintOverviewName) {
+    if (fintOverviewtitle) {
       res.status(402).json({
         code: 402,
-        message: "Existing name Overview",
+        message: "Existing title Overview",
       });
       return;
     }
     if (
-      !name ||
+      !title ||
       !type ||
       !method ||
       !degree ||
@@ -97,7 +97,7 @@ const createOverview = async (req, res) => {
       return;
     } else {
       let newOverview = new Overview({
-        name: name,
+        title: title,
         type: type,
         method: method,
         degree: degree,
@@ -171,7 +171,7 @@ const updateOverview = async (req, res) => {
       );
       // const responseData = {
       //   _id: result._id,
-      //   eduName: result.eduName,
+      //   edutitle: result.edutitle,
       //   eduType: result.eduType,
       //   applicableSubjects: result.applicableSubjects,
       //   goalsTraining: result.goalsTraining ? result.goalsTraining : "",

@@ -73,6 +73,7 @@ const createReferencesDoc = async (req, res) => {
       title: title ?? "",
       domesticContent: domesticContent ?? "",
       nonDomesticContent: nonDomesticContent ?? "",
+      type: req.body.type ?? "",
       idUserLatestEdit: findUserCreated,
       listIdUserEdited: [findUserCreated],
       createdBy: findUserCreated,
