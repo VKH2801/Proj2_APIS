@@ -33,7 +33,7 @@ const getByIdSubjectDetails = async (req, res) => {
   try {
     const findSubjectInfo = await SubjectDetails.findById({
       _id: req.params.id,
-    });
+    }).populate('idSubjectCombination').populate('idOutputStandard').populate('idClassificationScale');
     if (findSubjectInfo) {
       return res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,
@@ -60,7 +60,7 @@ const createNewSubjectDetails = async (req, res) => {
     //console.log(data);
     if (
       !data.subjectCode ||
-      !data.name ||
+      !data.title ||
       !data.idSubjectCombination ||
       !data.idOutputStandard ||
       !data.idClassificationScale ||
@@ -112,22 +112,23 @@ const createNewSubjectDetails = async (req, res) => {
 
     const newSubjectDetails = new SubjectDetails({
       subjectCode: data.subjectCode,
-      name: data.name,
+      title: data.title,
       theoryCredits: data.theoryCredits ? data.theoryCredits : 0,
       practiseCredits: data.practiseCredits ? data.practiseCredits : 0,
+      optionCredits: data.optionCredits ? data.optionCredits : "",
       idSubjectCombination: findSubjectCombination,
       idOutputStandard: findOutputStandard,
       idClassificationScale: findClassificationScale,
-      englishName: data.englishName ? data.englishName : "",
+      englishTitle: data.englishTitle ? data.englishTitle : "",
       synopsis: data.synopsis ? data.synopsis : "",
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
     });
-    await newSubjectDetails.save();
+    const result = await newSubjectDetails.save();
     return res.status(STATUS.CodeRes.CodeOk).json({
       code: STATUS.CodeRes.CodeOk,
-      data: newSubjectDetails,
+      data: result,
       message: "OK",
     });
   } catch (err) {

@@ -76,7 +76,7 @@ const register = async (req, res) => {
       const saltRounds = 10;
       const salt = bcrypt.genSaltSync(saltRounds);
       // const hashPassword = bcrypt.hashSync(password, salt);
-      bcrypt.hash(password, salt, async function (err, hash) {
+      await bcrypt.hash(password, salt, async function (err, hash) {
         console.log(hash);
         if (hash) {
           let newUser = new User({
@@ -122,19 +122,24 @@ const updateUser = async (req, res) => {
       });
     }
     let findUser = await User.findOne({ _id: req.params.id });
-    console.log(findUser);
+    if (req.body.password) {
+      const saltRounds = 10;
+      const salt = bcrypt.genSaltSync(saltRounds);
+      const hash = await bcrypt.hash(req.body.password, salt); // Use await here
+      req.body.password = hash;
+    }
     if (findUser) {
       await findUser.updateOne({ $set: lodash.omit(req.body, "email") });
       let data = await User.findOne({ _id: req.params.id });
       res.status(200).json({
         code: 200,
-        data: lodash.omit(data.toObject(), "password"),
+        data: data,
         message: "OK",
       });
     } else {
       res.status(420).json({
         code: 420,
-        message: "Non existent id",
+        message: "Non existent user",
       });
     }
   } catch (error) {

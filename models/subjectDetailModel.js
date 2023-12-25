@@ -37,7 +37,7 @@ const subjectDetails = new mongoose.Schema({
     ref: 'ClassificationScale',
     require: true,
   },
-  englishName: {
+  englishTitle: {
     type: String,
   },
   //Tóm tắt
