@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 
 const getAllOutputStandard = async (req, res) => {
   try {
-    let data = await OutputStanadard.find().populate("idOutputType");
+    let data = await OutputStanadard.find();
     res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
       data: data,
@@ -25,7 +25,7 @@ const getOutputStandardById = async (req, res) => {
   try {
     let findOutputStandard = await OutputStanadard.findOne({
       _id: req.params.id,
-    }).populate("idOutputType");
+    });
     if (!req.params.id) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
@@ -47,10 +47,10 @@ const getOutputStandardById = async (req, res) => {
 
 const createOutputStandard = async (req, res) => {
   try {
-    const findOutputType = await OutputType.findOne({
-      _id: req.body.idOutputType,
-    });
-    let { id, title, content, idOutputType, createdBy } = req.body;
+    // const findOutputType = await OutputType.findOne({
+    //   _id: req.body.idOutputType,
+    // });
+    let { id, title, content, createdBy } = req.body;
     const findValidOutStand = await OutputStanadard.findOne({ id: id });
     if (findValidOutStand) {
       return res.status(401).json({
@@ -58,17 +58,17 @@ const createOutputStandard = async (req, res) => {
         message: "id output standard is unique",
       });
     }
-    if (!findOutputType) {
-      return res.status(Res.CodeRes.CodeNonExistData).json({
-        code: Res.CodeRes.CodeNonExistData,
-        message:
-          Res.MessageRes.status403 +
-          " in output type: " +
-          req.body.idOutputType,
-      });
-    }
+    // if (!findOutputType) {
+    //   return res.status(Res.CodeRes.CodeNonExistData).json({
+    //     code: Res.CodeRes.CodeNonExistData,
+    //     message:
+    //       Res.MessageRes.status403 +
+    //       " in output type: " +
+    //       req.body.idOutputType,
+    //   });
+    // }
 
-    if (!idOutputType || !createdBy) {
+    if (!createdBy) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message: Res.MessageRes.status401,
@@ -87,7 +87,7 @@ const createOutputStandard = async (req, res) => {
       id: id ?? "",
       title: title ?? "",
       content: content ?? "",
-      idOutputType: findOutputType,
+      type: req.body.type ?? "awareness",
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
@@ -127,25 +127,25 @@ const updateOutputStandard = async (req, res) => {
     }
 
     if (findOutputStandard) {
-      if (data.idOutputType) {
-        const findOutputType = await OutputType.findById(data.idOutputType);
-        if (!findOutputType) {
-          return res.status(401).json({
-            code: 401,
-            message: "Invalid output type",
-          });
-        }
-      } else {
-        // Check if findOutputStandard.idOutputType is a valid ObjectId
-        if (mongoose.Types.ObjectId.isValid(findOutputStandard.idOutputType)) {
-          data.idOutputType = findOutputStandard.idOutputType;
-        } else {
-          return res.status(401).json({
-            code: 401,
-            message: "Invalid output type",
-          });
-        }
-      }      
+      // if (data.idOutputType) {
+      //   const findOutputType = await OutputType.findById(data.idOutputType);
+      //   if (!findOutputType) {
+      //     return res.status(401).json({
+      //       code: 401,
+      //       message: "Invalid output type",
+      //     });
+      //   }
+      // } else {
+      //   // Check if findOutputStandard.idOutputType is a valid ObjectId
+      //   if (mongoose.Types.ObjectId.isValid(findOutputStandard.idOutputType)) {
+      //     data.idOutputType = findOutputStandard.idOutputType;
+      //   } else {
+      //     return res.status(401).json({
+      //       code: 401,
+      //       message: "Invalid output type",
+      //     });
+      //   }
+      // }      
       data.listIdUserEdited = findOutputStandard.listIdUserEdited;
       data.createdBy = findOutputStandard.createdBy;
       if (!data.listIdUserEdited.includes(data.idUserLatestEdit)) {
@@ -155,7 +155,7 @@ const updateOutputStandard = async (req, res) => {
         { _id: req.params.id },
         { $set: lodash.omit(data) },
         { new: true }
-      ).populate("idOutputType");
+      );
 
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,

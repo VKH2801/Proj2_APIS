@@ -14,12 +14,17 @@ const outputStandard = mongoose.Schema(
     content: {
       type: String,
     },
-    idOutputType: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "OutputType",
-      require: true,
-      //default: 654b6d66a5a010e43ca8c974
+    type: {
+      type: String,
+      enum: ['awareness', 'skill', 'attitude'],
+      default: 'awareness',
     },
+    // idOutputType: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "OutputType",
+    //   require: true,
+    //   //default: 654b6d66a5a010e43ca8c974
+    // },
     idUserLatestEdit: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -44,6 +44,7 @@ const createOverview = async (req, res) => {
   try {
     let {
       title,
+      overviewId,
       type,
       method,
       degree,
@@ -82,6 +83,7 @@ const createOverview = async (req, res) => {
     }
     if (
       !title ||
+      !overviewId||
       !type ||
       !method ||
       !degree ||
@@ -98,6 +100,7 @@ const createOverview = async (req, res) => {
     } else {
       let newOverview = new Overview({
         title: title,
+        overviewId: overviewId,
         type: type,
         method: method,
         degree: degree,

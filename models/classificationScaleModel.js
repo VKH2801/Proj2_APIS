@@ -10,7 +10,7 @@ const classificationScale = mongoose.Schema({
     require: true,
     //default: 1,2,...
   },
-  nameLevel: {
+  title: {
     type: String,
     require: true,
     //default: Nhớ, Hiểu, ...
@@ -20,12 +20,17 @@ const classificationScale = mongoose.Schema({
     require: true,
     //default: 'Là khả năng ghi nhận và truy xuất lại các kiến thức, thông tin đã tiếp nhận; thể hiện qua việc có thể nhắc lại các kiến thức, thông tin đó.'
   },
-  idOutputType: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'OutputType',
-    required: true,
-    //default: '654b72698ba535dccbb0f7be'
+  type: {
+    type: String,
+    enum: ['awareness', 'skill', 'attitude'],
+    default: 'awareness'
   },
+  // idOutputType: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: 'OutputType',
+  //   required: true,
+  //   //default: '654b72698ba535dccbb0f7be'
+  // },
   idUserLatestEdit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
