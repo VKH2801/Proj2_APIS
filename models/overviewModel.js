@@ -7,6 +7,11 @@ const overviewSchema = new mongoose.Schema(
             require: true,
             //default: 'Chương trình đào tạo cử nhân chính quy ngành Kỹ thuật Phần mềm',
         },
+        overviewId: {
+            type: Number,
+            require: true,
+            default: 0
+        },
         type: {
             type: String,
             require: true,

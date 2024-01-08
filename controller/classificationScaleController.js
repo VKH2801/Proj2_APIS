@@ -6,7 +6,7 @@ const User = require("../models/userModel");
 
 const getAllClassifications = async (req, res) => {
   try {
-    const findCls = await ClassificationScale.find().populate("idOutputType");
+    const findCls = await ClassificationScale.find();
     return res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
       data: findCls,
@@ -24,7 +24,7 @@ const getClassifyById = async (req, res) => {
   try {
     const findCls = await ClassificationScale.findOne({
       _id: req.params.id,
-    }).populate("idOutputType");
+    });
     if (findCls) {
       return res.status(Res.CodeRes.CodeOk).json({
         code: Res.CodeRes.CodeOk,
@@ -48,7 +48,7 @@ const getClassifyById = async (req, res) => {
 const createClassifyScale = async (req, res) => {
   try {
     let data = req.body;
-    if (!data.idOutputType || !data.createdBy) {
+    if (!data.createdBy) {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message:
@@ -56,16 +56,16 @@ const createClassifyScale = async (req, res) => {
       });
     }
 
-    const findOutputType = await OutputType.findOne({ _id: data.idOutputType });
-    if (!findOutputType) {
-      return res.status(Res.CodeRes.CodeNonExistData).json({
-        code: Res.CodeRes.CodeNonExistData,
-        message:
-          Res.MessageRes.status403 +
-          " output type with id: " +
-          req.body.idOutputType,
-      });
-    }
+    // const findOutputType = await OutputType.findOne({ _id: data.idOutputType });
+    // if (!findOutputType) {
+    //   return res.status(Res.CodeRes.CodeNonExistData).json({
+    //     code: Res.CodeRes.CodeNonExistData,
+    //     message:
+    //       Res.MessageRes.status403 +
+    //       " output type with id: " +
+    //       req.body.idOutputType,
+    //   });
+    // }
 
     const findUser = await User.findOne({ _id: data.createdBy });
     if (!findUser) {
@@ -79,7 +79,8 @@ const createClassifyScale = async (req, res) => {
       level: data.level ?? 0,
       nameLevel: data.nameLevel ?? "",
       discription: data.discription ?? "",
-      idOutputType: findOutputType,
+      type: req.body.type ?? "awareness",
+      // idOutputType: findOutputType,
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
@@ -174,19 +175,19 @@ const updateCls = async (req, res) => {
       });
     }
 
-    const outputTypeId = req.body.idOutputType
-      ? req.body.idOutputType
-      : findCls.idOutputType;
-    const findOutputType = await OutputType.findOne({ _id: outputTypeId });
-    if (!findOutputType) {
-      return res.status(Res.CodeRes.CodeNonExistData).json({
-        code: Res.CodeRes.CodeNonExistData,
-        message:
-          Res.MessageRes.status403 +
-          " output type with id: " +
-          req.body.idOutputType,
-      });
-    }
+    // const outputTypeId = req.body.idOutputType
+    //   ? req.body.idOutputType
+    //   : findCls.idOutputType;
+    // const findOutputType = await OutputType.findOne({ _id: outputTypeId });
+    // if (!findOutputType) {
+    //   return res.status(Res.CodeRes.CodeNonExistData).json({
+    //     code: Res.CodeRes.CodeNonExistData,
+    //     message:
+    //       Res.MessageRes.status403 +
+    //       " output type with id: " +
+    //       req.body.idOutputType,
+    //   });
+    // }
 
     const findUser = await User.findById({ _id: req.body.idUserLatestEdit });
     if (!findUser) {
@@ -210,7 +211,7 @@ const updateCls = async (req, res) => {
       { _id: req.params.id },
       { $set: data },
       { new: true }
-    ).populate("idOutputType");
+    );
 
     return res.status(Res.CodeRes.CodeOk).json({
       code: Res.CodeRes.CodeOk,
