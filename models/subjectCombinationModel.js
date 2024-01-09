@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const subjectCombinationSchema = new mongoose.Schema({
   content: {
     type: String,
-    required: true,
     //default: Lý luận chính trị và pháp luật
   },
   title: {
+    require: true,
     type: String,
   },
   totalCredits: {
