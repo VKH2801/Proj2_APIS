@@ -6,9 +6,7 @@ const GENERALKNOWNLEDGE = require("../models/generalKnowledgeModel");
 
 const getAllSubCombination = async (req, res) => {
   try {
-    const findSubjCombination = await SubjectCombination.find().populate(
-      "idGeneralKnowledge"
-    );
+    const findSubjCombination = await SubjectCombination.find();
     res.status(200).json({
       code: 200,
       data: findSubjCombination,
@@ -26,7 +24,7 @@ const getByIdSubjCombination = async (req, res) => {
   try {
     const findByIdCombination = await SubjectCombination.findById({
       _id: req.params.id,
-    }).populate("idGeneralKnowledge");
+    });
     if (findByIdCombination) {
       res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,
@@ -55,38 +53,29 @@ const createSubjCombination = async (req, res) => {
       title,
       totalCredits,
       percents,
-      idGeneralKnowledge,
       createdBy,
     } = req.body;
-    if (!idGeneralKnowledge || !createdBy) {
+    if (!createdBy) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
         code: STATUS.CodeRes.CodeMissingRequiredData,
         message: STATUS.MessageRes.status401,
       });
     }
     const findUserForCreate = await USER.findOne({ _id: createdBy });
-    const findGeneralKnowledge = await GENERALKNOWNLEDGE.findOne({
-      _id: idGeneralKnowledge,
-    });
     if (!findUserForCreate) {
       return res.status(STATUS.CodeRes.CodeUserInvalid).json({
         code: STATUS.CodeRes.CodeUserInvalid,
         message: STATUS.MessageRes.status405,
       });
     }
-    if (!findGeneralKnowledge) {
-      return res.status(STATUS.CodeRes.CodeUserInvalid).json({
-        code: STATUS.CodeRes.CodeUserInvalid,
-        message: "Invalid general knowledge",
-      });
-    }
+    
 
     const newSubjCombination = new SubjectCombination({
       content: content ?? "",
       title: title ?? "",
       totalCredits: totalCredits ?? 0,
       percents: percents ?? 0,
-      idGeneralKnowledge: findGeneralKnowledge,
+      type: req.body.type,
       idUserLatestEdit: findUserForCreate,
       listIdUserEdited: [findUserForCreate],
       createdBy: findUserForCreate,
@@ -179,7 +168,7 @@ const createSubjCombination = async (req, res) => {
 
 const updateSubjCombination = async (req, res) => {
   try {
-    const { idUserLatestEdit, idGeneralKnowledge, percents, totalCredits } = req.body;
+    const { idUserLatestEdit, percents, totalCredits } = req.body;
 
     if (!idUserLatestEdit) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
@@ -200,18 +189,8 @@ const updateSubjCombination = async (req, res) => {
       ...req.body,
       listIdUserEdited: [...(findSubjCom.listIdUserEdited || []), idUserLatestEdit],
       createdBy: findSubjCom.createdBy || "",
-      idGeneralKnowledge: idGeneralKnowledge || findSubjCom.idGeneralKnowledge,
+      
     };
-
-    if (idGeneralKnowledge) {
-      const findGenKnowledgeUpdate = await GENERALKNOWNLEDGE.findOne({ _id: idGeneralKnowledge });
-      if (!findGenKnowledgeUpdate) {
-        return res.status(401).json({
-          code: 401,
-          message: "Invalid General knowledge for update",
-        });
-      }
-    }
 
     const findUserForEdit = await USER.findOne({ _id: idUserLatestEdit });
     if (!findUserForEdit) {
@@ -226,7 +205,7 @@ const updateSubjCombination = async (req, res) => {
       { _id: req.params.id },
       { $set: lodash.omit(data, "createdBy") },
       { new: true }
-    ).populate('idGeneralKnowledge');
+    );
 
     return res.status(STATUS.CodeRes.CodeOk).json({
       code: STATUS.CodeRes.CodeOk,
