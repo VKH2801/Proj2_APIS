@@ -118,18 +118,24 @@ const createNewSubjectDetails = async (req, res) => {
 
     if (data.relationship) {
       try {
-        for (const item of data.relationship) {
-          await (async function () {
-            const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
-            const findClassification = await ClassificationScale.findById(item.idClassificationScale);
+        const listCodeExisted = [];
+        data.relationship = data.relationship.filter(async function (item) {
+          const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
+          const findClassification = await ClassificationScale.findById(item.idClassificationScale);
     
-            if (findOutputStandard && findClassification) {
-              item.code = `${findOutputStandard.id}: ${findClassification.code}`;
+          if (findOutputStandard && findClassification) {
+            const codeCheck = `${findOutputStandard.id}: ${findClassification.code}`;
+            if (!listCodeExisted.includes(codeCheck)) {
+              item.code = codeCheck;
+              listCodeExisted.push(codeCheck);
+              return true; // Keep the item in the array
             } else {
-              item.code = '';
+              return false; // Remove the item from the array
             }
-          })();
-        }
+          } else {
+            return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
+          }
+        });
       } catch (err) {
         console.error(err);
       }
@@ -257,6 +263,31 @@ const updateSubjectsDetails = async (req, res) => {
       }
     } else {
       data.idClassificationScale = findSubjectDetailsInfo.idClassificationScale;
+    }
+
+    if (data.relationship) {
+      try {
+        const listCodeExisted = [];
+        data.relationship = data.relationship.filter(async function (item) {
+          const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
+          const findClassification = await ClassificationScale.findById(item.idClassificationScale);
+    
+          if (findOutputStandard && findClassification) {
+            const codeCheck = `${findOutputStandard.id}: ${findClassification.code}`;
+            if (!listCodeExisted.includes(codeCheck)) {
+              item.code = codeCheck;
+              listCodeExisted.push(codeCheck);
+              return true; // Keep the item in the array
+            } else {
+              return false; // Remove the item from the array
+            }
+          } else {
+            return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
+          }
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
 
     if (findSubjectDetailsInfo) {
