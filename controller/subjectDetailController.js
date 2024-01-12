@@ -33,7 +33,10 @@ const getByIdSubjectDetails = async (req, res) => {
   try {
     const findSubjectInfo = await SubjectDetails.findById({
       _id: req.params.id,
-    }).populate('idSubjectCombination').populate('idOutputStandard').populate('idClassificationScale');
+    })
+      .populate("idSubjectCombination")
+      .populate("idOutputStandard")
+      .populate("idClassificationScale");
     if (findSubjectInfo) {
       return res.status(STATUS.CodeRes.CodeOk).json({
         code: STATUS.CodeRes.CodeOk,
@@ -71,11 +74,14 @@ const createNewSubjectDetails = async (req, res) => {
         message: "Missing required data for creating new Subject Details",
       });
     }
-    const findSubjectDetailsCode = await SubjectDetails.findOne({ subjectCode: data.subjectCode});
+    const findSubjectDetailsCode = await SubjectDetails.findOne({
+      subjectCode: data.subjectCode,
+    });
     if (findSubjectDetailsCode) {
       return res.status(STATUS.CodeRes.CodeNonExistData).json({
         code: STATUS.CodeRes.CodeNonExistData,
-        message: "Invalid subject code for subject details - subject code must be unique",
+        message:
+          "Invalid subject code for subject details - subject code must be unique",
       });
     }
     const findSubjectCombination = await SubjectCombination.findOne({
@@ -118,13 +124,31 @@ const createNewSubjectDetails = async (req, res) => {
 
     if (data.relationship) {
       try {
+        const uniquePairs = new Set(); // Use a Set to store unique pairs
+        for (const item of data.relationship) {
+          const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+          if (uniquePairs.has(pair)) {
+            return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+              code: STATUS.CodeRes.CodeUnableUpdateId,
+              message: `Duplicate pair found: ${pair}`
+            })
+          } else {
+            uniquePairs.add(pair);
+          }
+        }
+
         const listCodeExisted = [];
         data.relationship = data.relationship.filter(async function (item) {
-          const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
-          const findClassification = await ClassificationScale.findById(item.idClassificationScale);
-    
+          const findOutputStandard = await OutputStandard.findById(
+            item.idOutputStandard
+          );
+          const findClassification = await ClassificationScale.findById(
+            item.idClassificationScale
+          );
+
           if (findOutputStandard && findClassification) {
-            const codeCheck = `${findOutputStandard.id}: ${findClassification.code}`;
+            const codeCheck =
+              `${findOutputStandard.id}: ${findClassification.code}`.trim();
             if (!listCodeExisted.includes(codeCheck)) {
               item.code = codeCheck;
               listCodeExisted.push(codeCheck);
@@ -139,9 +163,8 @@ const createNewSubjectDetails = async (req, res) => {
       } catch (err) {
         console.error(err);
       }
-      
     }
-    
+
     const newSubjectDetails = new SubjectDetails({
       subjectCode: data.subjectCode,
       title: data.title,
@@ -159,16 +182,18 @@ const createNewSubjectDetails = async (req, res) => {
       createdBy: findUser,
     });
 
-    console.log('Setting for push to array');
-    const updateListSubjectInCombination = await SubjectCombination.findByIdAndUpdate(
-      data.idSubjectCombination,
-      {$push : {listSubjectDetails: newSubjectDetails._id}},
-      { new: true }
-    )
+    console.log("Setting for push to array");
+    const updateListSubjectInCombination =
+      await SubjectCombination.findByIdAndUpdate(
+        data.idSubjectCombination,
+        { $push: { listSubjectDetails: newSubjectDetails._id } },
+        { new: true }
+      );
     if (!updateListSubjectInCombination) {
       return res.status(STATUS.CodeRes.CodeNonExistData).json({
         code: STATUS.CodeRes.CodeNonExistData,
-        message: "Unable to update id subject details to list in subject combination",
+        message:
+          "Unable to update id subject details to list in subject combination",
       });
     }
     const result = await newSubjectDetails.save();
@@ -267,13 +292,33 @@ const updateSubjectsDetails = async (req, res) => {
 
     if (data.relationship) {
       try {
+        const uniquePairs = new Set(); // Use a Set to store unique pairs
+        for (const item of data.relationship) {
+          const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+          if (uniquePairs.has(pair)) {
+            return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+              code: STATUS.CodeRes.CodeUnableUpdateId,
+              message: `Duplicate pair found: ${pair}`
+            })
+          } else {
+            uniquePairs.add(pair);
+          }
+        }
+
+
+        
         const listCodeExisted = [];
         data.relationship = data.relationship.filter(async function (item) {
-          const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
-          const findClassification = await ClassificationScale.findById(item.idClassificationScale);
-    
+          const findOutputStandard = await OutputStandard.findById(
+            item.idOutputStandard
+          );
+          const findClassification = await ClassificationScale.findById(
+            item.idClassificationScale
+          );
+
           if (findOutputStandard && findClassification) {
-            const codeCheck = `${findOutputStandard.id}: ${findClassification.code}`;
+            const codeCheck =
+              `${findOutputStandard.id}: ${findClassification.code}`.trim();
             if (!listCodeExisted.includes(codeCheck)) {
               item.code = codeCheck;
               listCodeExisted.push(codeCheck);
