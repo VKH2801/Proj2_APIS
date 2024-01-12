@@ -24,35 +24,36 @@ const subjectDetails = new mongoose.Schema({
   },
   idSubjectCombination: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
     ref: 'SubjectCombination'
   },
   idOutputStandard: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'OutputStandard',
-    require: true,
   },
   idClassificationScale: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ClassificationScale',
-    require: true,
   },
   englishTitle: {
     type: String,
   },
+
+  
   //relation ship output standard with classification scale
   relationship: [
     {
-      // outputStandard: {
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: 'OutputStandard',
-      // },
-      // classification: {
-      //   type: mongoose.Schema.Types.ObjectId,
-      //   ref: 'ClassificationScale',
-      // }
-      type: String,
-      default: ''
+      code: {
+        type: String
+      },
+      idOutputStandard: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OutputStandard'
+      },
+      idClassificationScale: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ClassificationScale',
+      }
+      
     }
   ],
   //Tóm tắt
