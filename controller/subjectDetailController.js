@@ -71,7 +71,13 @@ const createNewSubjectDetails = async (req, res) => {
         message: "Missing required data for creating new Subject Details",
       });
     }
-
+    const findSubjectDetailsCode = await SubjectDetails.findOne({ subjectCode: data.subjectCode});
+    if (findSubjectDetailsCode) {
+      return res.status(STATUS.CodeRes.CodeNonExistData).json({
+        code: STATUS.CodeRes.CodeNonExistData,
+        message: "Invalid subject code for subject details - subject code must be unique",
+      });
+    }
     const findSubjectCombination = await SubjectCombination.findOne({
       _id: data.idSubjectCombination,
     });
@@ -109,7 +115,7 @@ const createNewSubjectDetails = async (req, res) => {
         message: "Invalid id user to create",
       });
     }
-
+    
     const newSubjectDetails = new SubjectDetails({
       subjectCode: data.subjectCode,
       title: data.title,
@@ -121,10 +127,24 @@ const createNewSubjectDetails = async (req, res) => {
       idClassificationScale: findClassificationScale,
       englishTitle: data.englishTitle ? data.englishTitle : "",
       synopsis: data.synopsis ? data.synopsis : "",
+      relationship: data.relationship ?? "",
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
     });
+
+    console.log('Setting for push to array');
+    const updateListSubjectInCombination = await SubjectCombination.findByIdAndUpdate(
+      data.idSubjectCombination,
+      {$push : {listSubjectDetails: newSubjectDetails._id}},
+      { new: true }
+    )
+    if (!updateListSubjectInCombination) {
+      return res.status(STATUS.CodeRes.CodeNonExistData).json({
+        code: STATUS.CodeRes.CodeNonExistData,
+        message: "Unable to update id subject details to list in subject combination",
+      });
+    }
     const result = await newSubjectDetails.save();
     return res.status(STATUS.CodeRes.CodeOk).json({
       code: STATUS.CodeRes.CodeOk,

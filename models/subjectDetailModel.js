@@ -40,6 +40,21 @@ const subjectDetails = new mongoose.Schema({
   englishTitle: {
     type: String,
   },
+  //relation ship output standard with classification scale
+  relationship: [
+    {
+      // outputStandard: {
+      //   type: mongoose.Schema.Types.ObjectId,
+      //   ref: 'OutputStandard',
+      // },
+      // classification: {
+      //   type: mongoose.Schema.Types.ObjectId,
+      //   ref: 'ClassificationScale',
+      // }
+      type: String,
+      default: ''
+    }
+  ],
   //Tóm tắt
   synopsis: {
     type: String,
