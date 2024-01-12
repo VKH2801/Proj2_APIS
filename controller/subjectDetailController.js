@@ -123,43 +123,77 @@ const createNewSubjectDetails = async (req, res) => {
     }
 
     if (data.relationship) {
+      const listCodeExisted = [];
       try {
+        // const uniquePairs = new Set(); // Use a Set to store unique pairs
+        // for (const item of data.relationship) {
+        //   const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+        //   if (uniquePairs.has(pair)) {
+        //     return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+        //       code: STATUS.CodeRes.CodeUnableUpdateId,
+        //       message: `Duplicate pair found: ${pair}`
+        //     })
+        //   }
+        // }
+
         const uniquePairs = new Set(); // Use a Set to store unique pairs
-        for (const item of data.relationship) {
-          const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
-          if (uniquePairs.has(pair)) {
-            return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
-              code: STATUS.CodeRes.CodeUnableUpdateId,
-              message: `Duplicate pair found: ${pair}`
-            })
-          } else {
-            uniquePairs.add(pair);
-          }
-        }
 
-        const listCodeExisted = [];
-        data.relationship = data.relationship.filter(async function (item) {
-          const findOutputStandard = await OutputStandard.findById(
-            item.idOutputStandard
-          );
-          const findClassification = await ClassificationScale.findById(
-            item.idClassificationScale
-          );
-
-          if (findOutputStandard && findClassification) {
-            const codeCheck =
-              `${findOutputStandard.id}: ${findClassification.code}`.trim();
-            if (!listCodeExisted.includes(codeCheck)) {
-              item.code = codeCheck;
-              listCodeExisted.push(codeCheck);
-              return true; // Keep the item in the array
-            } else {
-              return false; // Remove the item from the array
+        // Using Promise.all to wait for all asynchronous queries to complete
+        await Promise.all(
+          data.relationship.map(async function (item) {
+            const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+            if (uniquePairs.has(pair)) {
+              return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+                code: STATUS.CodeRes.CodeUnableUpdateId,
+                message: `Duplicate pair found: ${pair}`,
+              });
             }
-          } else {
-            return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
-          }
-        });
+
+            try {
+              const findOutputStandard = await OutputStandard.findById(
+                item.idOutputStandard
+              );
+              const findClassification = await ClassificationScale.findById(
+                item.idClassificationScale
+              );
+
+              if (findOutputStandard && findClassification) {
+                const codeCheck =
+                  `${findOutputStandard.id}: ${findClassification.code}`.trim();
+                if (!listCodeExisted.includes(codeCheck)) {
+                  item.code = codeCheck;
+                  listCodeExisted.push(codeCheck);
+                  uniquePairs.add(pair);
+                }
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          })
+        );
+
+        // data.relationship = data.relationship.filter(async function (item) {
+        //   const findOutputStandard = await OutputStandard.findById(
+        //     item.idOutputStandard
+        //   );
+        //   const findClassification = await ClassificationScale.findById(
+        //     item.idClassificationScale
+        //   );
+
+        //   if (findOutputStandard && findClassification) {
+        //     const codeCheck =
+        //       `${findOutputStandard.id}: ${findClassification.code}`.trim();
+        //     if (!listCodeExisted.includes(codeCheck)) {
+        //       item.code = codeCheck;
+        //       listCodeExisted.push(codeCheck);
+        //       return true; // Keep the item in the array
+        //     } else {
+        //       return false; // Remove the item from the array
+        //     }
+        //   } else {
+        //     return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
+        //   }
+        // });
       } catch (err) {
         console.error(err);
       }
@@ -291,45 +325,77 @@ const updateSubjectsDetails = async (req, res) => {
     }
 
     if (data.relationship) {
+      const listCodeExisted = [];
       try {
+        // const uniquePairs = new Set(); // Use a Set to store unique pairs
+        // for (const item of data.relationship) {
+        //   const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+        //   if (uniquePairs.has(pair)) {
+        //     return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+        //       code: STATUS.CodeRes.CodeUnableUpdateId,
+        //       message: `Duplicate pair found: ${pair}`
+        //     })
+        //   }
+        // }
+
         const uniquePairs = new Set(); // Use a Set to store unique pairs
-        for (const item of data.relationship) {
-          const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
-          if (uniquePairs.has(pair)) {
-            return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
-              code: STATUS.CodeRes.CodeUnableUpdateId,
-              message: `Duplicate pair found: ${pair}`
-            })
-          } else {
-            uniquePairs.add(pair);
-          }
-        }
 
-
-        
-        const listCodeExisted = [];
-        data.relationship = data.relationship.filter(async function (item) {
-          const findOutputStandard = await OutputStandard.findById(
-            item.idOutputStandard
-          );
-          const findClassification = await ClassificationScale.findById(
-            item.idClassificationScale
-          );
-
-          if (findOutputStandard && findClassification) {
-            const codeCheck =
-              `${findOutputStandard.id}: ${findClassification.code}`.trim();
-            if (!listCodeExisted.includes(codeCheck)) {
-              item.code = codeCheck;
-              listCodeExisted.push(codeCheck);
-              return true; // Keep the item in the array
-            } else {
-              return false; // Remove the item from the array
+        // Using Promise.all to wait for all asynchronous queries to complete
+        await Promise.all(
+          data.relationship.map(async function (item) {
+            const pair = `${item.idOutputStandard}:${item.idClassificationScale}`;
+            if (uniquePairs.has(pair)) {
+              return res.status(STATUS.CodeRes.CodeUnableUpdateId).json({
+                code: STATUS.CodeRes.CodeUnableUpdateId,
+                message: `Duplicate pair found: ${pair}`,
+              });
             }
-          } else {
-            return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
-          }
-        });
+
+            try {
+              const findOutputStandard = await OutputStandard.findById(
+                item.idOutputStandard
+              );
+              const findClassification = await ClassificationScale.findById(
+                item.idClassificationScale
+              );
+
+              if (findOutputStandard && findClassification) {
+                const codeCheck =
+                  `${findOutputStandard.id}: ${findClassification.code}`.trim();
+                if (!listCodeExisted.includes(codeCheck)) {
+                  item.code = codeCheck;
+                  listCodeExisted.push(codeCheck);
+                  uniquePairs.add(pair);
+                }
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          })
+        );
+
+        // data.relationship = data.relationship.filter(async function (item) {
+        //   const findOutputStandard = await OutputStandard.findById(
+        //     item.idOutputStandard
+        //   );
+        //   const findClassification = await ClassificationScale.findById(
+        //     item.idClassificationScale
+        //   );
+
+        //   if (findOutputStandard && findClassification) {
+        //     const codeCheck =
+        //       `${findOutputStandard.id}: ${findClassification.code}`.trim();
+        //     if (!listCodeExisted.includes(codeCheck)) {
+        //       item.code = codeCheck;
+        //       listCodeExisted.push(codeCheck);
+        //       return true; // Keep the item in the array
+        //     } else {
+        //       return false; // Remove the item from the array
+        //     }
+        //   } else {
+        //     return false; // Remove the item from the array if OutputStandard or ClassificationScale is not found
+        //   }
+        // });
       } catch (err) {
         console.error(err);
       }
