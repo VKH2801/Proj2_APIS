@@ -115,6 +115,26 @@ const createNewSubjectDetails = async (req, res) => {
         message: "Invalid id user to create",
       });
     }
+
+    if (data.relationship) {
+      try {
+        for (const item of data.relationship) {
+          await (async function () {
+            const findOutputStandard = await OutputStandard.findById(item.idOutputStandard);
+            const findClassification = await ClassificationScale.findById(item.idClassificationScale);
+    
+            if (findOutputStandard && findClassification) {
+              item.code = `${findOutputStandard.id}: ${findClassification.code}`;
+            } else {
+              item.code = '';
+            }
+          })();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+      
+    }
     
     const newSubjectDetails = new SubjectDetails({
       subjectCode: data.subjectCode,
@@ -127,7 +147,7 @@ const createNewSubjectDetails = async (req, res) => {
       idClassificationScale: findClassificationScale,
       englishTitle: data.englishTitle ? data.englishTitle : "",
       synopsis: data.synopsis ? data.synopsis : "",
-      relationship: data.relationship ?? "",
+      relationship: data.relationship ?? [],
       idUserLatestEdit: findUser,
       listIdUserEdited: [findUser],
       createdBy: findUser,
