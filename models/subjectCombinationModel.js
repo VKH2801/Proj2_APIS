@@ -29,6 +29,10 @@ const subjectCombinationSchema = new mongoose.Schema({
   //   ref: 'GeneralKnowledge',
   //   require: true,
   // },
+  listSubjectDetails: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SubjectDetails'
+  }],
   idUserLatestEdit: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
