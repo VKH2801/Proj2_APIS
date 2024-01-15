@@ -10,6 +10,8 @@ const getUser = async (req, res) => {
       'pdfData.outputType',
       'pdfData.classifyScale',
       'pdfData.subjectCombination',
+      'pdfData.traingingReg',
+      'pdfData.graduationCondition'
     ]);
     res.status(200).json({
       code: 200,
@@ -34,7 +36,9 @@ const login = async (req, res) => {
       'pdfData.outputType',
       'pdfData.classifyScale',
       'pdfData.subjectCombination',
-    ]);;
+      'pdfData.traingingReg',
+      'pdfData.graduationCondition'
+    ]);
     if (findUser === null) {
       res.status(420).json({
         code: 420,
@@ -153,7 +157,9 @@ const updateUser = async (req, res) => {
         'pdfData.outputType',
         'pdfData.classifyScale',
         'pdfData.subjectCombination',
-      ]);;
+        'pdfData.traingingReg',
+        'pdfData.graduationCondition'
+      ]);
 
       //let data = await User.findOne({ _id: req.params.id });
       res.status(200).json({
@@ -183,7 +189,9 @@ const getUserDetail = async (req, res) => {
       'pdfData.outputType',
       'pdfData.classifyScale',
       'pdfData.subjectCombination',
-    ]);;
+      'pdfData.traingingReg',
+      'pdfData.graduationCondition'
+    ]);
     if (data) {
       res.status(200).json({
         code: 200,
