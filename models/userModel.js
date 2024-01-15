@@ -64,6 +64,10 @@ const userSchema = new mongoose.Schema(
       graduationCondition: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'GraduationCondition'
+      },
+      programImage: {
+        type: String,
+        default: ""
       }
     },
   },
