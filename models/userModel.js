@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "SubjectCombination",
       },
-      traingingReg: {
+      trainingReg: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'TrainingRegulation'
       },
