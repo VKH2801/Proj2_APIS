@@ -57,6 +57,14 @@ const userSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "SubjectCombination",
       },
+      traingingReg: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'TrainingRegulation'
+      },
+      graduationCondition: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'GraduationCondition'
+      }
     },
   },
   { timestamps: true }

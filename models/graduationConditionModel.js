@@ -4,6 +4,8 @@ const graduationConditions = mongoose.Schema(
   {
     title: {
       type: String,
+      require: true,
+      default: ""
     },
     content: {
       type: String,
