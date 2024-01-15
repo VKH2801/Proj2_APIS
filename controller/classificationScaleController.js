@@ -77,6 +77,7 @@ const createClassifyScale = async (req, res) => {
     let newCls = new ClassificationScale({
       code: data.code ?? "",
       level: data.level ?? 0,
+      title: data.title,
       nameLevel: data.nameLevel ?? "",
       discription: data.discription ?? "",
       type: req.body.type ?? "awareness",
