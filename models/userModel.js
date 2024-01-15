@@ -22,15 +22,19 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
+      default: "",
     },
     firstName: {
       type: String,
+      default: "",
     },
     phoneNumber: {
       type: String,
+      default: "",
     },
     avatar: {
       type: String,
+      default: "",
     },
     pdfData: {
       overview: {

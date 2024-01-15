@@ -115,12 +115,13 @@ const register = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    if (!req.body) {
-      return res.status(400).json({
-        code: 400,
-        message: "Missing data in body",
-      });
-    }
+    // if (!req.body) {
+    //   return res.status(400).json({
+    //     code: 400,
+    //     message: "Missing data in body",
+    //   });
+    // }
+
     let findUser = await User.findOne({ _id: req.params.id });
     if (req.body.password) {
       const saltRounds = 10;
@@ -129,11 +130,17 @@ const updateUser = async (req, res) => {
       req.body.password = hash;
     }
     if (findUser) {
-      await findUser.updateOne({ $set: lodash.omit(req.body, "email") });
-      let data = await User.findOne({ _id: req.params.id });
+      //await findUser.updateOne({ $set: lodash.omit(req.body, "email") });
+      const result = await User.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: lodash.omit(req.body, "email") },
+        { new: true }
+      );
+
+      //let data = await User.findOne({ _id: req.params.id });
       res.status(200).json({
         code: 200,
-        data: data,
+        data: result,
         message: "OK",
       });
     } else {
@@ -145,7 +152,7 @@ const updateUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error,
+      message: error.message,
     });
   }
 };
