@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 
 const getAllGraduationConditions = async (req, res) => {
   try {
-    let data = await GraduationCondition.find().populate("idOverView");
+    let data = await GraduationCondition.find();
     res.status(200).json({
       code: 200,
       data: data,
@@ -23,7 +23,7 @@ const getGraduationConditionsById = async (req, res) => {
   try {
     let data = await GraduationCondition.findOne({
       _id: req.params.id,
-    }).populate("idOverView");
+    });
     if (!req.params.id) {
       res.status(401).json({
         code: 401,
@@ -64,8 +64,8 @@ const getGraduationConditionsById = async (req, res) => {
 
 const createGraduationCondition = async (req, res) => {
   try {
-    let { title, content, idOverView, createdBy } = req.body;
-    if (!idOverView || !createdBy) {
+    let { title, content, createdBy } = req.body;
+    if (!createdBy) {
       res.status(401).json({
         code: 401,
         message: "Missing data",
@@ -81,29 +81,27 @@ const createGraduationCondition = async (req, res) => {
       });
     }
 
-    const findOverviewRef = await Overview.findOne({ _id: idOverView });
-    if (findOverviewRef) {
-      let newGraduationCondition = new GraduationCondition({
-        content: content ?? "",
-        title: title ?? "",
-        idOverView: findOverviewRef,
-        idUserLatestEdit: findUserCreate,
-        listIdUserEdited: [findUserCreate._id],
-        createdBy: findUserCreate,
-      });
-      let result = await newGraduationCondition.save();
-      res.status(200).json({
-        code: 200,
-        data: result,
-        message: "OK",
-      });
-      return;
-    } else {
-      res.status(402).json({
-        code: 402,
-        message: "Invalid overview id provided",
-      });
-    }
+    // const findOverviewRef = await Overview.findOne({ _id: idOverView });
+    // if (!findOverviewRef) {
+    //   res.status(402).json({
+    //     code: 402,
+    //     message: "Invalid overview id provided",
+    //   });
+    // } 
+    let newGraduationCondition = new GraduationCondition({
+      content: content ?? "",
+      title: title ?? "",
+      idUserLatestEdit: findUserCreate,
+      listIdUserEdited: [findUserCreate._id],
+      createdBy: findUserCreate,
+    });
+    let result = await newGraduationCondition.save();
+    res.status(200).json({
+      code: 200,
+      data: result,
+      message: "OK",
+    });
+    return;
   } catch (err) {
     res.status(500).json({
       code: 500,
@@ -119,18 +117,18 @@ const updateGraduationCondition = async (req, res) => {
     });
 
     let data = req.body;
-    if (data.idOverView) {
-      const findOverview = await Overview.findOne({ _id: req.body.idOverView });
-      if (!findOverview) {
-        res.status(403).json({
-          code: 403,
-          message: "Invalid overview id provided",
-        });
-        return;
-      }
-    } else {
-      data.idOverView = findGraduationCondition.idOverView;
-    }
+    // if (data.idOverView) {
+    //   const findOverview = await Overview.findOne({ _id: req.body.idOverView });
+    //   if (!findOverview) {
+    //     res.status(403).json({
+    //       code: 403,
+    //       message: "Invalid overview id provided",
+    //     });
+    //     return;
+    //   }
+    // } else {
+    //   data.idOverView = findGraduationCondition.idOverView;
+    // }
 
     if (!data.idUserLatestEdit) {
       return res.status(405).json({
@@ -160,7 +158,7 @@ const updateGraduationCondition = async (req, res) => {
         { _id: req.params.id },
         { $set: lodash.omit(data, "createdBy") },
         { new: true }
-      ).populate("idOverView");
+      );
       if (result) {
         res.status(200).json({
           code: 200,
