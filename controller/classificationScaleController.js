@@ -52,7 +52,7 @@ const createClassifyScale = async (req, res) => {
       return res.status(Res.CodeRes.CodeMissingRequiredData).json({
         code: Res.CodeRes.CodeMissingRequiredData,
         message:
-          Res.MessageRes.status401 + ": idOutputType or createdBy not provided",
+          Res.MessageRes.status401 + ": createdBy not provided",
       });
     }
 
@@ -205,7 +205,7 @@ const updateCls = async (req, res) => {
     
     // Update the code here to use lodash.omit and populate the idOutputType
     const data = lodash.omit(req.body, "_id");
-    data.idOutputType = outputTypeId; // Assign the correct idOutputType
+    //data.idOutputType = outputTypeId; // Assign the correct idOutputType
 
     const result = await ClassificationScale.findByIdAndUpdate(
       { _id: req.params.id },
