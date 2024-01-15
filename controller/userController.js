@@ -4,7 +4,13 @@ const lodash = require("lodash");
 
 const getUser = async (req, res) => {
   try {
-    let data = await User.find();
+    let data = await User.find().populate([
+      'pdfData.overview',
+      'pdfData.enroll',
+      'pdfData.outputType',
+      'pdfData.classifyScale',
+      'pdfData.subjectCombination',
+    ]);
     res.status(200).json({
       code: 200,
       data: data,
@@ -22,7 +28,13 @@ const login = async (req, res) => {
   try {
     console.log(req.body);
     let { email, password } = req.body;
-    let findUser = await User.findOne({ email: email });
+    let findUser = await User.findOne({ email: email }).populate([
+      'pdfData.overview',
+      'pdfData.enroll',
+      'pdfData.outputType',
+      'pdfData.classifyScale',
+      'pdfData.subjectCombination',
+    ]);;
     if (findUser === null) {
       res.status(420).json({
         code: 420,
@@ -135,7 +147,13 @@ const updateUser = async (req, res) => {
         { _id: req.params.id },
         { $set: lodash.omit(req.body, "email") },
         { new: true }
-      );
+      ).populate([
+        'pdfData.overview',
+        'pdfData.enroll',
+        'pdfData.outputType',
+        'pdfData.classifyScale',
+        'pdfData.subjectCombination',
+      ]);;
 
       //let data = await User.findOne({ _id: req.params.id });
       res.status(200).json({
@@ -159,7 +177,13 @@ const updateUser = async (req, res) => {
 
 const getUserDetail = async (req, res) => {
   try {
-    let data = await User.findOne({ _id: req.params.id });
+    let data = await User.findOne({ _id: req.params.id }).populate([
+      'pdfData.overview',
+      'pdfData.enroll',
+      'pdfData.outputType',
+      'pdfData.classifyScale',
+      'pdfData.subjectCombination',
+    ]);;
     if (data) {
       res.status(200).json({
         code: 200,
