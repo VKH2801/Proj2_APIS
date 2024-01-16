@@ -65,8 +65,6 @@ const createNewSubjectDetails = async (req, res) => {
       !data.subjectCode ||
       !data.title ||
       !data.idSubjectCombination ||
-      !data.idOutputStandard ||
-      !data.idClassificationScale ||
       !data.createdBy
     ) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
@@ -94,25 +92,25 @@ const createNewSubjectDetails = async (req, res) => {
       });
     }
 
-    const findOutputStandard = await OutputStandard.findOne({
-      _id: data.idOutputStandard,
-    });
-    if (!findOutputStandard) {
-      return res.status(STATUS.CodeRes.CodeNonExistData).json({
-        code: STATUS.CodeRes.CodeNonExistData,
-        message: "Invalid id for Output standard",
-      });
-    }
+    // const findOutputStandard = await OutputStandard.findOne({
+    //   _id: data.idOutputStandard,
+    // });
+    // if (!findOutputStandard) {
+    //   return res.status(STATUS.CodeRes.CodeNonExistData).json({
+    //     code: STATUS.CodeRes.CodeNonExistData,
+    //     message: "Invalid id for Output standard",
+    //   });
+    // }
 
-    const findClassificationScale = await ClassificationScale.findOne({
-      _id: data.idClassificationScale,
-    });
-    if (!findClassificationScale) {
-      return res.status(STATUS.CodeRes.CodeNonExistData).json({
-        code: STATUS.CodeRes.CodeNonExistData,
-        message: "Invalid id for Classification scale",
-      });
-    }
+    // const findClassificationScale = await ClassificationScale.findOne({
+    //   _id: data.idClassificationScale,
+    // });
+    // if (!findClassificationScale) {
+    //   return res.status(STATUS.CodeRes.CodeNonExistData).json({
+    //     code: STATUS.CodeRes.CodeNonExistData,
+    //     message: "Invalid id for Classification scale",
+    //   });
+    // }
 
     const findUser = await User.findOne({ _id: data.createdBy });
     if (!findUser) {
@@ -206,8 +204,8 @@ const createNewSubjectDetails = async (req, res) => {
       practiseCredits: data.practiseCredits ? data.practiseCredits : 0,
       optionCredits: data.optionCredits ? data.optionCredits : "",
       idSubjectCombination: findSubjectCombination,
-      idOutputStandard: findOutputStandard,
-      idClassificationScale: findClassificationScale,
+      idOutputStandard: findOutputStandard ?? null,
+      idClassificationScale: findClassificationScale ?? null,
       englishTitle: data.englishTitle ? data.englishTitle : "",
       synopsis: data.synopsis ? data.synopsis : "",
       relationship: data.relationship ?? [],
