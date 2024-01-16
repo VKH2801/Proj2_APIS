@@ -65,8 +65,6 @@ const createNewSubjectDetails = async (req, res) => {
       !data.subjectCode ||
       !data.title ||
       !data.idSubjectCombination ||
-      !data.idOutputStandard ||
-      !data.idClassificationScale ||
       !data.createdBy
     ) {
       return res.status(STATUS.CodeRes.CodeMissingRequiredData).json({
