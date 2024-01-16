@@ -204,8 +204,6 @@ const createNewSubjectDetails = async (req, res) => {
       practiseCredits: data.practiseCredits ? data.practiseCredits : 0,
       optionCredits: data.optionCredits ? data.optionCredits : "",
       idSubjectCombination: findSubjectCombination,
-      idOutputStandard: findOutputStandard ?? null,
-      idClassificationScale: findClassificationScale ?? null,
       englishTitle: data.englishTitle ? data.englishTitle : "",
       synopsis: data.synopsis ? data.synopsis : "",
       relationship: data.relationship ?? [],
