@@ -30,6 +30,10 @@ const subjectDetailsRouter = require("./routes/subjectDetailsRoute");
 
 
 //Use routes to app
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    next();
+  });
 //app.use("/", )
 app.use("/user", userRouter);
 app.use("/overview", overviewRouter);
